@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search | DIVZ</title>
+<meta name="description" content="Search DIVZ hampers by occasion, recipient or maker.">
+<meta name="theme-color" content="#1E3B2F">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/gambetta-300.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/switzer-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/divz.css">
+<script src="assets/js/data.js"></script>
+<script src="assets/js/core.js"></script>
+<script src="assets/js/pages.js"></script>
+</head>
+<body data-page="search">
+<script>DIVZ.top()</script>
+
+<main id="main">
+
+  <section class="container page-hero">
+    <h1 class="t-h2" data-sp-title>Search</h1>
+    <form class="search-page__form" action="search.html" role="search">
+      <label class="visually-hidden" for="sp">Search hampers</label>
+      <input id="sp" name="q" type="search" placeholder="Search hampers, occasions or makers" data-sp-input>
+      <button type="submit" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
+    </form>
+  </section>
+  <section class="container" style="padding-bottom:var(--section)" data-sp-grid></section>
+</main>
+
+<script>DIVZ.bottom()</script>
+<script>DIVZ.boot()</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout | DIVZ</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/divz.css">
+<script src="assets/js/data.js"></script>
+<script src="assets/js/core.js"></script>
+<script src="assets/js/pages.js"></script>
+</head>
+<body data-page="checkout" style="background:#fff">
+<!-- In production this is Shopify Checkout. Only branding (logo, colours, fonts) is themeable on non-Plus plans,
+     so this mock keeps Shopify's one-page layout and fields. -->
+<main id="main" class="co" data-checkout></main>
+<div class="toast" role="status" aria-live="polite" data-toast></div>
+<script>
+  // checkout has no theme header/footer, so boot only what it needs
+  DIVZ.pages.checkout();
+</script>
+</body>
+</html>

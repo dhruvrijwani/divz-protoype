@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact us | DIVZ</title>
+<meta name="description" content="Contact the DIVZ studio about an order, corporate gifting or wedding hampers.">
+<meta name="theme-color" content="#1E3B2F">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/gambetta-300.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/switzer-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/divz.css">
+<script src="assets/js/data.js"></script>
+<script src="assets/js/core.js"></script>
+<script src="assets/js/pages.js"></script>
+</head>
+<body data-page="contact">
+<script>DIVZ.top()</script>
+
+<main id="main">
+
+  <section class="container page-hero">
+    <h1 class="t-h1">Talk to our studio.</h1>
+    <p class="t-lead">Questions about an order, a big corporate list or your wedding invitations: you’ll hear back from a real person within one business day, usually much sooner.</p>
+  </section>
+  <section class="container contact" style="padding-bottom:var(--section)">
+    <form class="contact__form" data-contact novalidate>
+      <div class="row">
+        <div class="field"><label for="cname">Name</label><input class="input" id="cname" autocomplete="name"><span class="field-error" hidden></span></div>
+        <div class="field"><label for="cemail">Email</label><input class="input" id="cemail" type="email" autocomplete="email"><span class="field-error" hidden></span></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="cphone">Phone <span class="t-muted" style="font-weight:400">optional</span></label><input class="input" id="cphone" type="tel" autocomplete="tel"></div>
+        <div class="field"><label for="topic">What’s it about?</label><select class="select" id="topic"><option>A new order</option><option>An existing order</option><option>Corporate gifting</option><option>Wedding orders</option><option>Something else</option></select></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="cqty">How many hampers? <span class="t-muted" style="font-weight:400">optional</span></label><input class="input" id="cqty" inputmode="numeric" placeholder="For example, 40"></div>
+        <div class="field"><label for="cdate">Needed by <span class="t-muted" style="font-weight:400">optional</span></label><input class="input" id="cdate" type="date"></div>
+      </div>
+      <div class="field"><label for="cmsg">Message</label><textarea class="textarea" id="cmsg" style="min-height:160px" placeholder="Tell us who it’s for, your budget per hamper and anything we should know."></textarea><span class="field-error" hidden></span></div>
+      <div><button class="btn" type="submit">Send message</button></div>
+    </form>
+    <aside class="contact__aside" aria-label="Contact details">
+      <div><h3>Email</h3><a class="link" href="mailto:hello@divz.com.au">hello@divz.com.au</a></div>
+      <div><h3>Phone</h3><a class="link" href="tel:0255504321">(02) 5550 4321</a><p class="t-small t-muted">Monday to Friday, 8am to 5pm AEST. Saturdays in November and December.</p></div>
+      <div><h3>Studio</h3><p>Alexandria, Sydney NSW 2015</p><p class="t-small t-muted">Click and collect weekdays from 10am. The studio isn’t a shop, so please order online first.</p></div>
+      <div class="box"><p class="t-h4">Corporate gifting</p><p class="t-small">Logo ribbons and printed cards from 20 hampers, delivery to every address on your list and one invoice. Tell us your numbers and we’ll send a quote.</p><a class="link t-small" href="collection.html?c=corporate-gifting">Browse corporate hampers</a></div>
+    </aside>
+  </section>
+  <section class="section section--mist" aria-labelledby="cfaq-h">
+    <div class="container faq" style="align-items:start">
+      <h2 class="t-h2" id="cfaq-h">Quick answers</h2>
+      <div class="acc">
+        <details><summary>When will my order arrive?<span class="pm" aria-hidden="true"></span></summary><div class="acc__body"><p>Order by 1pm AEST on a weekday for same-day dispatch. Sydney and Melbourne metro can have it the same day, other capitals in 1–2 business days and regional areas in 2–5.</p></div></details>
+        <details><summary>Can I change my card message after ordering?<span class="pm" aria-hidden="true"></span></summary><div class="acc__body"><p>Yes, until we start packing your hamper. Reply to your order confirmation email or call us and we’ll update it.</p></div></details>
+        <details><summary>Do you deliver on weekends?<span class="pm" aria-hidden="true"></span></summary><div class="acc__body"><p>Saturday delivery is available in Sydney and Melbourne metro. Choose a Saturday date in your bag before checkout.</p></div></details>
+        <details><summary>Can you swap an item for an allergy?<span class="pm" aria-hidden="true"></span></summary><div class="acc__body"><p>Usually, yes. Add a note in your bag or contact us before you order and we’ll suggest a swap of equal value.</p></div></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>DIVZ.bottom()</script>
+<script>DIVZ.boot()</script>
+</body>
+</html>
