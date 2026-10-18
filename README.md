@@ -1,6 +1,6 @@
-# DIVZ: storefront prototype
+# Zariva: storefront prototype
 
-A clickable prototype of the DIVZ hamper store for the client pitch. It is plain HTML, CSS and JavaScript with no build step and no dependencies. Every page, section and interaction is something we can build in a customised free Shopify theme. The Shopify mapping is in the table below.
+A clickable prototype of the Zariva hamper store for the client pitch. It is plain HTML, CSS and JavaScript with no build step and no dependencies. Every page, section and interaction is something we can build in a customised free Shopify theme. The Shopify mapping is in the table below.
 
 ## Open it
 
@@ -11,7 +11,7 @@ A clickable prototype of the DIVZ hamper store for the client pitch. It is plain
 ## Demo script (about 5 minutes)
 
 1. **Home.** The hero "unwraps" on the first visit of each session. To replay it, add `?unwrap` to the URL (`index.html?unwrap`). Hover the dot on the hero image: it's a shoppable hotspot.
-2. **Shop by occasion.** The occasion gift tags drop onto the ribbon as you scroll. Hover one and it swings. Each occasion has its own ribbon colour, and that colour carries through the menu, chips, collection pages and badges.
+2. **Shop by occasion.** A quiet index of the seven occasions. Move down the list and the arch-framed photograph beside it changes; the active row gets a plum rule. Click any row to open that collection. On mobile each row carries a small arch thumbnail instead.
 3. **Bestsellers.** Hover a card to see the second photo and "Choose options" (quick add).
 4. **Diwali feature.** It shows a live countdown to Diwali (Sunday 8 November 2026).
 5. **Unboxed by you (UGC).** The reels autoplay in view. Click one to open the shoppable player.
@@ -45,16 +45,22 @@ Catalogue: 40 products (35 hampers and 5 add-ons) across the 7 occasions from th
 
 | Token | Value | Use |
 |---|---|---|
-| Bush | `#1E3B2F` | Text, buttons, footer: deep eucalypt green |
-| Paper | `#FBFBF8` | Page background |
-| Mist | `#EDF0EB` | Alternate sections, image placeholders |
-| Gum | `#5C6E62` | Secondary text |
-| Wattle | `#E2B04A` | Ribbon, focus and accent details only |
-| Occasion ribbons | Diwali `#E0892B`, Corporate `#4A555C`, Baby `#8FB0C8`, Wedding `#C9AE84`, Her `#C8607A`, Him `#8C5E3C`, Christmas `#B23A2E` | Set per collection |
+| White | `#FFFFFF` | Base background everywhere |
+| Ink | `#1C1719` | Headings, body copy, footer |
+| Zariva Plum | `#5A1E3C` | Brand and action colour: buttons, links, selected states, logo |
+| Plum Deep | `#43152C` | Button hover and pressed |
+| Gold | `#B38B4D` | Detail only: diamond, thin rules, progress bar. Never text |
+| Gold Text | `#86652C` | Small labels and eyebrows on white |
+| Mist | `#F8F4F5` | Soft section backgrounds, image placeholders |
+| Stone | `#675F63` | Secondary text |
+| Line | `#E6E1E3` | Hairlines on cards and inputs |
 
-- **Type:** Gambetta (display serif) with Switzer (UI and body), both free from Fontshare and self-hosted. La Belle Aurore is used only for the handwritten-card preview.
-- **Signature shapes:** collections are hanging gift tags (chamfered corners, punched eyelet, string) on a ribbon rail. Badges are small gift tags too.
-- **Motion:** one orchestrated moment (the unwrap), tags dropping onto the rail once, image reveals, and motion that answers the user (drawers, the tag swing, hover image swaps). Everything respects reduced-motion settings.
+Balance is about 70% white, 12% mist, 10% ink, 6% plum, 2% gold. Occasions no longer carry their own colours.
+
+- **Type:** Cormorant Garamond (display, weights 500 and 600, always upright) with Jost (UI and body, 400 to 600), both OFL and self-hosted. La Belle Aurore is used only for the handwritten-card preview.
+- **Logo:** an arch (an Indian doorway) holding one gold diamond, with HOUSE OF over a wide-spaced ZARIVA. Built in `logoHTML()` in `core.js`; the favicon is `assets/img/favicon.svg`.
+- **Signature shapes:** the arch and the diamond, and nothing else. The occasion index and collection heroes frame photographs in an arch. Badges are plain small-caps labels.
+- **Motion:** one orchestrated moment (the unwrap), the occasion list revealing row by row, image reveals, and motion that answers the user (drawers, the arch photograph changing as you move down the occasion list, hover image swaps). Everything respects reduced-motion settings.
 - **Australian details:** AUD with GST included, Afterpay messaging, postcode-based delivery, same-day metro delivery, Australian spelling, an Acknowledgement of Country, and makers from every state.
 
 ## Shopify build plan
@@ -66,7 +72,7 @@ Catalogue: 40 products (35 hampers and 5 add-ons) across the 7 occasions from th
 | Announcement bar, header, sticky header | Native sections |
 | Occasions mega menu with feature images | Header menu + 2 custom feature blocks |
 | Hero unwrap + hotspot | Custom section (Liquid/CSS/JS), product picker for the hotspot |
-| Occasion gift tags | Custom collection-list section; ribbon colour = collection metafield (colour type) |
+| Occasion index | Custom collection-list section: a list of collection links, each with a collection image for the arch stage (a one-line descriptor can be a collection metafield) |
 | Bestsellers slider | Featured collection section on an automated "Bestsellers" collection |
 | Diwali countdown feature | Image-with-text section + countdown block (date setting) |
 | UGC reels + shoppable player | Custom section: video blocks (Shopify-hosted video) each with a product picker |
@@ -99,7 +105,7 @@ Catalogue: 40 products (35 hampers and 5 add-ons) across the 7 occasions from th
 ```
 index.html … 404.html   page templates (static HTML)
 checkout.html            Shopify-style checkout mock
-assets/css/divz.css      the whole design system and every section's styles
+assets/css/zariva.css      the whole design system and every section's styles
 assets/js/data.js        products, collections, reviews, UGC (stand-ins for Shopify data)
 assets/js/core.js        header, menus, drawers, cart, quick add, search, reels
 assets/js/pages.js       page logic (one function per template)

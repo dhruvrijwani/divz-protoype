@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DIVZ | Hampers for every occasion, delivered across Australia</title>
+<title>House of Zariva | Hampers for every occasion, delivered across Australia</title>
 <meta name="description" content="Premium gift hampers for Diwali, Christmas, birthdays, baby showers, weddings and corporate gifting. Packed by hand in Sydney with a handwritten card. Same-day delivery in Sydney and Melbourne.">
-<meta name="theme-color" content="#1E3B2F">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/gambetta-300.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/switzer-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/divz.css">
-<script>try{if(!sessionStorage.getItem('divz-unwrapped')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('is-unwrapping')}}catch(e){}</script>
+<link rel="preload" href="assets/fonts/cormorant-garamond-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jost-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/zariva.css">
+<script>try{if(!sessionStorage.getItem('zariva-unwrapped')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('is-unwrapping')}}catch(e){}</script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/core.js"></script>
 <script src="assets/js/pages.js"></script>
 </head>
 <body data-page="home">
-<script>DIVZ.top()</script>
+<script>ZARIVA.top()</script>
 
 <main id="main">
 
@@ -45,13 +45,13 @@
         <svg class="wrap__bow" viewBox="0 0 120 70" aria-hidden="true">
           <path d="M60 35C42 6 9 7 13 29c3 17 30 14 47 6z" fill="currentColor"/>
           <path d="M60 35c18-29 51-28 47-6-3 17-30 14-47 6z" fill="currentColor"/>
-          <path d="M57 33C45 22 25 17 22 27c-2 7 15 9 35 6z" fill="#C99530" opacity=".55"/>
-          <path d="M63 33c12-11 32-16 35-6 2 7-15 9-35 6z" fill="#C99530" opacity=".55"/>
+          <path d="M57 33C45 22 25 17 22 27c-2 7 15 9 35 6z" fill="#B38B4D" opacity=".55"/>
+          <path d="M63 33c12-11 32-16 35-6 2 7-15 9-35 6z" fill="#B38B4D" opacity=".55"/>
           <path d="M57 38L41 69l10-3 9-26z" fill="currentColor"/>
           <path d="M63 38l16 31-10-3-9-26z" fill="currentColor"/>
-          <ellipse cx="60" cy="35" rx="9" ry="8" fill="#C99530"/>
+          <ellipse cx="60" cy="35" rx="9" ry="8" fill="#B38B4D"/>
         </svg>
-        <span class="wrap__label" aria-hidden="true">DIVZ</span>
+        <span class="wrap__label" aria-hidden="true"><svg viewBox="0 0 24 30" fill="none"><path d="M3.5 29.5V12.2a8.5 8.5 0 0 1 17 0v17.3" stroke="currentColor" stroke-width="1.4"/><path d="M12 14.4l2.5 3-2.5 3-2.5-3z" fill="#B38B4D"/></svg><span>House of</span><b>Zariva</b></span>
         <a class="hotspot" href="product.html?p=the-protea-box" aria-label="Shop The Protea Box, from $135">
           <span class="hotspot__dot" aria-hidden="true"></span>
           <span class="hotspot__card" aria-hidden="true"><b>The Protea Box</b><span>From $135</span></span>
@@ -60,16 +60,18 @@
     </div>
   </section>
 
-  <!-- Section: occasion tags (custom "collection-tags" section) -->
+  <!-- Section: occasion index (custom "collection-index" section: list of collection links + arch image stage) -->
   <section class="occasions" id="occasions" aria-labelledby="occ-h">
-    <div class="container">
-      <div class="section-head">
-        <div class="section-head__text">
+    <div class="container occ">
+      <div class="occ__stage" aria-hidden="true"><div class="occ__arch" data-occ-stage></div></div>
+      <div class="occ__body">
+        <div class="occ__head">
+          <p class="eyebrow">Occasions</p>
           <h2 class="t-h2" id="occ-h">Shop by occasion</h2>
-          <p>Each occasion has its own ribbon colour, right down to the box we send.</p>
+          <p>Choose the moment and we’ll show you the hampers.</p>
         </div>
+        <ol class="occ__list" data-occ-list></ol>
       </div>
-      <div class="rail"><div class="rail__track" data-tags></div></div>
     </div>
   </section>
 
@@ -136,7 +138,7 @@
   </section>
 
   <!-- Section: corporate band (image with text) -->
-  <section class="section--bush on-dark" aria-labelledby="corp-h">
+  <section class="section--plum on-dark" aria-labelledby="corp-h">
     <div class="band">
       <div class="band__media">
         <img src="assets/img/exchange-900.jpg" srcset="assets/img/exchange-900.jpg 900w, assets/img/exchange-1700.jpg 1700w" sizes="(max-width: 1023px) 100vw, 50vw" alt="Two people passing a wrapped white gift box across a table" loading="lazy" style="object-position:50% 40%">
@@ -171,7 +173,7 @@
 
 </main>
 
-<script>DIVZ.bottom()</script>
-<script>DIVZ.boot()</script>
+<script>ZARIVA.bottom()</script>
+<script>ZARIVA.boot()</script>
 </body>
 </html>

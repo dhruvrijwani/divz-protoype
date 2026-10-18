@@ -1,6 +1,6 @@
 # Media credits
 
-All photography and video in this prototype is **placeholder stock** used to illustrate the design. Replace it with DIVZ product photography before launch.
+All photography and video in this prototype is **placeholder stock** used to illustrate the design. Replace it with Zariva product photography before launch.
 
 ## Photos: Unsplash
 
@@ -114,5 +114,5 @@ Free under the [Mixkit License](https://mixkit.co/license/#videoFree). Clips wer
 
 ## Fonts
 
-- **Gambetta** and **Switzer**: Indian Type Foundry via [Fontshare](https://www.fontshare.com), ITF Free Font License (free for commercial use, self-hosted in `assets/fonts/`).
+- **Cormorant Garamond** and **Jost**: SIL Open Font License, via [Fontsource](https://fontsource.org) (self-hosted in `assets/fonts/`).
 - **La Belle Aurore**: Google Fonts, SIL Open Font License. Used only for the handwritten-card preview.

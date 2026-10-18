@@ -1,11 +1,11 @@
-/* DIVZ prototype — core runtime.
+/* Zariva prototype — core runtime.
    Theme-level behaviour you would ship in a Shopify theme's global JS:
    header + mega menu, drawers, predictive search, cart (Cart AJAX API in Shopify), quick add,
    reels player, shared renderers. */
 (function () {
   'use strict';
-  const D = window.DIVZ_DATA;
-  const DIVZ = (window.DIVZ = window.DIVZ || {});
+  const D = window.ZARIVA_DATA;
+  const ZARIVA = (window.ZARIVA = window.ZARIVA || {});
   document.documentElement.classList.add('js');
 
   /* ------------------------------------------------------------------ utils */
@@ -111,12 +111,11 @@
     if (handle === 'bestsellers') return D.products.filter(p => p.best).sort((a, b) => a.best - b.best);
     return D.products.filter(p => p.occasions.includes(handle));
   }
-  const occColor = h => (D.collections[h] && D.collections[h].color) || 'var(--bush)';
 
   /* ------------------------------------------------------------------ cart (Shopify: /cart/add.js, /cart/change.js) */
   const FREE_SHIP = 150;
   const Cart = {
-    key: 'divz-cart-v1',
+    key: 'zariva-cart-v1',
     state: null,
     load() { this.state = store.get(this.key, { items: [], note: '', attrs: {} }); this.state.items = (this.state.items || []).filter(i => PMAP[i.handle]); },
     save() { store.set(this.key, this.state); document.dispatchEvent(new CustomEvent('cart:change')); },
@@ -159,7 +158,7 @@
       const per = Math.min.apply(null, unitOpt.values.map(v => variantPrice(p, Object.assign(defaultSel(p), { [unitOpt.name]: v.v })).price / v.units));
       priceHtml = `From ${money(per)} a box`;
     }
-    const badge = p.badge ? `<span class="badge ${p.badge === 'Limited' ? 'badge--wattle' : ''}">${esc(p.badge)}</span>` : '';
+    const badge = p.badge ? `<span class="badge ${p.badge === 'Limited' ? 'badge--gold' : ''}">${esc(p.badge)}</span>` : '';
     const second = p.images[1] && p.images[1] !== p.images[0] ? img(p.images[1], { cls: 'card__img card__img--2', sizes: o.sizes }) : '';
     return `<article class="card">
       <div class="card__top">
@@ -228,6 +227,10 @@
     return `<p class="afterpay-line">or 4 interest-free payments of ${money(price / 4, true)} with <span class="afterpay-pill">afterpay</span></p>`;
   }
 
+  /* ------------------------------------------------------------------ logo: an arch holding one gold diamond, HOUSE OF over the wordmark */
+  const ARCH = '<svg class="logo__arch" viewBox="0 0 24 30" fill="none" aria-hidden="true"><path d="M3.5 29.5V12.2a8.5 8.5 0 0 1 17 0v17.3" stroke="currentColor" stroke-width="1.4"/><path class="logo__diamond" d="M12 14.4l2.5 3-2.5 3-2.5-3z"/></svg>';
+  const logoHTML = () => '<span class="logo__lockup">' + ARCH + '<span class="logo__of">House of</span><span class="logo__word">Zariva</span></span>';
+
   /* ------------------------------------------------------------------ chrome: top (announcement + header) */
   const OCC = D.OCCASIONS;
   function navCount(h) { const n = inCollection(h).length; return `${n} hamper${n === 1 ? '' : 's'}`; }
@@ -241,7 +244,7 @@
       'Same-day delivery across Sydney and Melbourne metro when you order by 1pm.',
       'Christmas pre-orders are open. <a href="collection.html?c=christmas">Choose your dispatch date</a>.'
     ];
-    const occList = OCC.map(h => `<a href="collection.html?c=${h}"><span class="eyelet-dot" style="--c:${occColor(h)}"></span>${esc(D.collections[h].title)}<span class="mega__count">${navCount(h)}</span></a>`).join('');
+    const occList = OCC.map(h => `<a href="collection.html?c=${h}">${esc(D.collections[h].title)}<span class="mega__count">${navCount(h)}</span></a>`).join('');
     return `
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="announce" role="region" aria-label="Announcements">
@@ -261,7 +264,7 @@
         <button class="nav__link" type="button" aria-expanded="false" aria-controls="mega" data-mega>Occasions ${I.chev}</button>
       </nav>
     </div>
-    <a class="logo" href="index.html" aria-label="DIVZ, home"><span class="logo__word">DIVZ</span></a>
+    <a class="logo" href="index.html" aria-label="House of Zariva, home">${logoHTML()}</a>
     <div class="header__right">
       <nav class="nav nav--right" aria-label="Secondary">
         <a class="nav__link nav__link--opt" href="about.html"${cur('about')}>About</a>
@@ -312,32 +315,32 @@
         <div><h3>Shop</h3><ul><li><a href="collection.html?c=all">All hampers</a></li><li><a href="collection.html?c=bestsellers">Bestsellers</a></li><li><a href="collection.html?c=all&type=Add-on">Add-ons</a></li><li><a href="search.html">Search</a></li></ul></div>
         <div><h3>Occasions</h3><ul>${occLinks}</ul></div>
         <div><h3>Help</h3><ul><li><a href="contact.html">Contact us</a></li><li><a href="faq.html#delivery">Shipping & delivery</a></li><li><a href="faq.html#orders">Orders & changes</a></li><li><a href="faq.html#returns">Returns & refunds</a></li><li><a href="faq.html">FAQs</a></li></ul></div>
-        <div><h3>DIVZ</h3><ul><li><a href="about.html">Our story</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="contact.html?topic=corporate">Corporate enquiries</a></li><li><a href="account.html">Your account</a></li></ul></div>
+        <div><h3>Zariva</h3><ul><li><a href="about.html">Our story</a></li><li><a href="reviews.html">Reviews</a></li><li><a href="contact.html?topic=corporate">Corporate enquiries</a></li><li><a href="account.html">Your account</a></li></ul></div>
       </div>
     </div>
     <div class="footer__mid">
       <p class="footer__ack">${I.leaf}<span>We pack every hamper on Gadigal land. We acknowledge the Traditional Custodians of the lands across Australia where our makers grow, bake and pour, and pay our respects to Elders past and present.</span></p>
       <div class="footer__social">
-        <a href="#" aria-label="DIVZ on Instagram">${I.instagram}</a><a href="#" aria-label="DIVZ on TikTok">${I.tiktok}</a><a href="#" aria-label="DIVZ on Pinterest">${I.pinterest}</a><a href="#" aria-label="DIVZ on Facebook">${I.facebook}</a>
+        <a href="#" aria-label="Zariva on Instagram">${I.instagram}</a><a href="#" aria-label="Zariva on TikTok">${I.tiktok}</a><a href="#" aria-label="Zariva on Pinterest">${I.pinterest}</a><a href="#" aria-label="Zariva on Facebook">${I.facebook}</a>
       </div>
     </div>
     <div class="footer__bottom">
-      <span>© 2026 DIVZ Pty Ltd. Prices in AUD and include GST.</span>
+      <span>© 2026 Zariva Pty Ltd. Prices in AUD and include GST.</span>
       <div class="pay-icons" aria-label="Payment methods we accept"><span>Visa</span><span>Mastercard</span><span>Amex</span><span>PayPal</span><span>Apple Pay</span><span>Google Pay</span><span>Shop Pay</span><span>Afterpay</span></div>
     </div>
   </div>
-  <div class="footer__word" aria-hidden="true"><span>DIVZ</span></div>
+  <div class="footer__word" aria-hidden="true"><span>Zariva</span></div>
 </footer>
 
 <div class="scrim" data-scrim></div>
 
 <aside class="drawer drawer--left" id="menu-drawer" aria-label="Menu" aria-hidden="true" tabindex="-1">
-  <div class="drawer__head"><span class="logo"><span class="logo__word" style="font-size:24px">DIVZ</span></span><button class="icon-btn" type="button" data-close aria-label="Close menu">${I.close}</button></div>
+  <div class="drawer__head"><span class="logo logo--sm">${logoHTML()}</span><button class="icon-btn" type="button" data-close aria-label="Close menu">${I.close}</button></div>
   <div class="drawer__body">
     <nav class="mnav" aria-label="Mobile">
       <a href="collection.html?c=all">Shop all ${I.right}</a>
       <a href="collection.html?c=bestsellers">Bestsellers ${I.right}</a>
-      <details open><summary>Occasions ${I.chev}</summary><div>${OCC.map(h => `<a href="collection.html?c=${h}"><span class="chip-dot" style="--c:${occColor(h)}"></span>${esc(D.collections[h].title)}</a>`).join('')}</div></details>
+      <details open><summary>Occasions ${I.chev}</summary><div>${OCC.map(h => `<a href="collection.html?c=${h}">${esc(D.collections[h].title)}</a>`).join('')}</div></details>
       <a href="about.html">About ${I.right}</a>
       <a href="reviews.html">Reviews ${I.right}</a>
       <a href="contact.html">Contact ${I.right}</a>
@@ -413,7 +416,7 @@
     openEl = null;
     if (!silent && opener && opener.focus) opener.focus({ preventScroll: true });
   }
-  DIVZ.open = open; DIVZ.close = close;
+  ZARIVA.open = open; ZARIVA.close = close;
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { if (openEl) close(); else closeMega(); }
@@ -436,7 +439,7 @@
     clearTimeout(toastT);
     toastT = setTimeout(() => t.classList.remove('is-on'), 2600);
   }
-  DIVZ.toast = toast;
+  ZARIVA.toast = toast;
 
   /* ------------------------------------------------------------------ mega menu */
   let megaT;
@@ -542,7 +545,7 @@
       <a class="btn btn--secondary btn--block" href="cart.html">View bag and choose a delivery date</a>
       ${afterpayHTML(sub)}`;
   }
-  DIVZ.renderCartDrawer = renderCartDrawer;
+  ZARIVA.renderCartDrawer = renderCartDrawer;
 
   // line-item controls (drawer and cart page)
   document.addEventListener('click', e => {
@@ -585,7 +588,7 @@
     }
     setTimeout(() => open('cart-drawer', btn), btn ? 450 : 0);
   }
-  DIVZ.addToBag = addToBag;
+  ZARIVA.addToBag = addToBag;
 
   /* ------------------------------------------------------------------ quick add */
   function renderQuick(p, sel) {
@@ -634,7 +637,7 @@
       return { p, score };
     }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).map(x => x.p);
   }
-  DIVZ.searchProducts = searchProducts;
+  ZARIVA.searchProducts = searchProducts;
   const hl = (text, q) => {
     const safe = esc(text);
     const w = q.trim().split(/\s+/).filter(Boolean).map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
@@ -678,7 +681,7 @@
     });
   }, { threshold: 0.35 }) : null;
   function observeReels(root) { $$('.reel video', root).forEach(v => reelIO && reelIO.observe(v)); }
-  DIVZ.observeReels = observeReels;
+  ZARIVA.observeReels = observeReels;
   let reelList = D.ugc, reelIdx = 0;
   function renderReel(i) {
     reelIdx = (i + reelList.length) % reelList.length;
@@ -687,16 +690,16 @@
     $('[data-reel-panel]').innerHTML = `<button class="icon-btn modal__close" type="button" data-close aria-label="Close video">${I.close}</button>
       <div class="reel-player">
         <div class="reel-player__video"><video src="assets/video/${u.video}.mp4" poster="assets/video/${u.video}.jpg" muted loop playsinline autoplay></video>
-          <button class="icon-btn" type="button" data-reel-toggle aria-label="Pause video" style="position:absolute;left:12px;bottom:12px;background:rgba(251,251,248,.85);color:var(--bush)">${I.pause}</button></div>
+          <button class="icon-btn" type="button" data-reel-toggle aria-label="Pause video" style="position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.85);color:var(--ink)">${I.pause}</button></div>
         <div class="reel-player__info">
           <div class="stack-m">
-            <p class="t-meta" style="color:rgba(251,251,248,.7)">${esc(u.name)}, ${esc(u.place)}</p>
+            <p class="t-meta" style="color:rgba(255,255,255,.7)">${esc(u.name)}, ${esc(u.place)}</p>
             <p class="t-quote">“${esc(u.quote)}”</p>
           </div>
           <div class="stack-m">
             <a class="reel-product" href="product.html?p=${p.handle}"><span class="reel-product__media">${img(p.images[0], { sizes: '84px', alt: '' })}</span><span><span class="reel-product__title">${esc(p.title)}</span><br><span class="t-small" style="opacity:.75">${r.min !== r.max ? 'From ' : ''}${money(r.min)}</span></span></a>
             <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn--light" type="button" data-quick="${p.handle}">${(p.options || []).length ? 'Choose options' : 'Add to bag'}</button><a class="btn btn--ghost-light" href="product.html?p=${p.handle}">View hamper</a></div>
-            <div style="display:flex;gap:8px;justify-content:flex-end"><button class="slider__btn" style="border-color:rgba(251,251,248,.4)" type="button" data-reel-prev aria-label="Previous video">${I.left}</button><button class="slider__btn" style="border-color:rgba(251,251,248,.4)" type="button" data-reel-next aria-label="Next video">${I.right}</button></div>
+            <div style="display:flex;gap:8px;justify-content:flex-end"><button class="slider__btn" style="border-color:rgba(255,255,255,.4)" type="button" data-reel-prev aria-label="Previous video">${I.left}</button><button class="slider__btn" style="border-color:rgba(251,251,248,.4)" type="button" data-reel-next aria-label="Next video">${I.right}</button></div>
           </div>
         </div>
       </div>`;
@@ -745,41 +748,56 @@
     window.addEventListener('resize', debounce(sync, 120));
     sync();
   }
-  DIVZ.initSlider = initSlider;
+  ZARIVA.initSlider = initSlider;
   const sliderHead = (title, sub, link) => `<div class="section-head"><div class="section-head__text"><h2 class="t-h2">${title}</h2>${sub ? `<p>${sub}</p>` : ''}</div><div style="display:flex;align-items:center;gap:24px">${link || ''}<div class="slider__nav"><button class="slider__btn" type="button" data-prev aria-label="Scroll back">${I.left}</button><button class="slider__btn" type="button" data-next aria-label="Scroll forward">${I.right}</button></div></div></div>`;
 
   /* ------------------------------------------------------------------ one-time reveals */
   function initReveals(root) {
-    const els = $$('.rail, .image-reveal', root);
+    const els = $$('.occ__list, .image-reveal', root);
     if (!('IntersectionObserver' in window) || reduceMotion()) return;
     const io = new IntersectionObserver(entries => {
       entries.forEach(en => {
         if (!en.isIntersecting) return;
         const el = en.target;
-        if (el.classList.contains('rail')) { el.classList.add('is-dropped'); setTimeout(() => { el.classList.remove('will-drop', 'is-dropped'); }, 2600); }
-        else el.classList.add('is-revealed');
+        el.classList.add('is-revealed');
         io.unobserve(el);
       });
     }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
     els.forEach(el => {
       const r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight * 0.85 && r.bottom > 0 && !el.classList.contains('rail')) return; // already on screen: leave as is
-      if (el.classList.contains('rail')) el.classList.add('will-drop'); else el.classList.add('will-reveal');
+      if (r.top < window.innerHeight * 0.85 && r.bottom > 0) return; // already on screen: leave as is
+      el.classList.add('will-reveal');
       io.observe(el);
     });
   }
-  DIVZ.initReveals = initReveals;
+  ZARIVA.initReveals = initReveals;
 
-  /* ------------------------------------------------------------------ occasion tags */
-  function tagHTML(h, i, o) {
-    o = o || {};
-    const c = D.collections[h];
-    const lens = [44, 70, 54, 82, 48, 66, 58];
-    return `<a class="otag" href="collection.html?c=${h}" style="--len:${o.len || lens[i % lens.length]}px;--c:${c.color || 'var(--bush)'};--i:${i}">
-      <span class="otag__string" aria-hidden="true"></span><span class="otag__knot" aria-hidden="true"></span>
-      <span class="otag__body"><span class="otag__card" style="display:block">${img(c.image, { sizes: o.sizes || '(max-width: 1200px) 150px, 13vw', alt: '' })}</span><span class="otag__eyelet" aria-hidden="true"></span></span>
-      ${o.noLabel ? '' : `<span class="otag__name">${esc(c.title)}</span><span class="otag__count">${navCount(h)}</span>`}
-    </a>`;
+  /* ------------------------------------------------------------------ occasion index (home: list + arch stage) */
+  function occasionIndexHTML() {
+    const rows = D.OCCASIONS.map((h, i) => {
+      const c = D.collections[h];
+      return `<li style="--i:${i}"><a class="occ__row${i === 0 ? ' is-active' : ''}" href="collection.html?c=${h}" data-occ-row="${i}">
+        <span class="occ__thumb" aria-hidden="true">${img(c.image, { sizes: '72px', alt: '' })}</span>
+        <span class="occ__n" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
+        <span class="occ__txt"><span class="occ__name">${esc(c.title)}</span><span class="occ__line">${esc(c.line || '')}</span></span>
+        <span class="occ__count">${navCount(h)}</span>
+        <span class="occ__arrow" aria-hidden="true">${I.right}</span>
+      </a></li>`;
+    }).join('');
+    const stage = D.OCCASIONS.map((h, i) => `<span class="occ__frame${i === 0 ? ' is-active' : ''}">${img(D.collections[h].image, { sizes: '(max-width: 1023px) 1px, 40vw', alt: '' })}</span>`).join('');
+    return { rows, stage };
+  }
+  function initOccasions(root) {
+    const rows = $$('[data-occ-row]', root), frames = $$('.occ__frame', root);
+    if (!rows.length) return;
+    const show = i => {
+      rows.forEach((r, j) => r.classList.toggle('is-active', j === i));
+      frames.forEach((f, j) => f.classList.toggle('is-active', j === i));
+    };
+    rows.forEach((r, i) => {
+      r.addEventListener('mouseenter', () => show(i));
+      r.addEventListener('focus', () => show(i));
+    });
   }
 
   /* ------------------------------------------------------------------ newsletter */
@@ -795,11 +813,11 @@
   }
 
   /* ------------------------------------------------------------------ public API */
-  Object.assign(DIVZ, {
+  Object.assign(ZARIVA, {
     D, $, $$, esc, money, params, store, I, img, starsHTML, fmtDate, debounce, reduceMotion,
-    product, PMAP, combos, isSoldOut, defaultSel, variantPrice, priceRange, variantTitle, inCollection, occColor, navCount,
-    Cart, FREE_SHIP, cardHTML, reviewHTML, reelHTML, optionsHTML, afterpayHTML, lineHTML, freeBarHTML, tagHTML, sliderHead,
-    pages: DIVZ.pages || {},
+    product, PMAP, combos, isSoldOut, defaultSel, variantPrice, priceRange, variantTitle, inCollection, navCount,
+    Cart, FREE_SHIP, cardHTML, reviewHTML, reelHTML, optionsHTML, afterpayHTML, lineHTML, freeBarHTML, occasionIndexHTML, initOccasions, logoHTML, sliderHead,
+    pages: ZARIVA.pages || {},
     top() { document.currentScript.insertAdjacentHTML('beforebegin', topHTML()); },
     bottom() { document.currentScript.insertAdjacentHTML('beforebegin', bottomHTML()); },
     boot() {
@@ -811,7 +829,7 @@
         if (e.target.closest('[data-close]') || e.target.matches('[data-scrim]')) close();
       });
       const page = document.body.dataset.page;
-      if (DIVZ.pages[page]) DIVZ.pages[page]();
+      if (ZARIVA.pages[page]) ZARIVA.pages[page]();
       observeReels(document);
       initReveals(document);
       $$('.slider').forEach(initSlider);

@@ -1,7 +1,7 @@
-/* DIVZ prototype — catalogue data.
+/* Zariva prototype — catalogue data.
    In Shopify this lives in products, variants, collections, metafields/metaobjects
    (inside items, dietary, recipients) and a reviews app. All content here is sample content. */
-window.DIVZ_DATA = (function () {
+window.ZARIVA_DATA = (function () {
   'use strict';
 
   const OCCASIONS = ['diwali', 'corporate-gifting', 'baby-shower', 'wedding-invitations', 'birthday-for-her', 'birthday-for-him', 'christmas'];
@@ -16,34 +16,34 @@ window.DIVZ_DATA = (function () {
       blurb: 'The hampers Australians send most, updated each week from what leaves our studio.'
     },
     diwali: {
-      title: 'Diwali', short: 'Diwali', color: '#E0892B', image: 'd-hands-diya', banner: 'd-row',
+      title: 'Diwali', short: 'Diwali', line: 'Sweets, brass and light.', image: 'd-hands-diya', banner: 'd-row',
       blurb: 'Sweets, brass and light for the festival of lights, packed in marigold and sent across Australia.',
       note: 'Diwali is Sunday 8 November. Order by Monday 2 November for delivery Australia-wide.'
     },
     'corporate-gifting': {
-      title: 'Corporate gifting', short: 'Corporate', color: '#4A555C', image: 'exchange',
+      title: 'Corporate gifting', short: 'Corporate', line: 'For clients and teams.', image: 'exchange',
       blurb: 'Hampers for clients and teams, from ten boxes to a thousand. Your logo on the ribbon, one delivery list, one invoice.',
       note: 'Ordering 20 or more? We’ll send a quote within one business day.'
     },
     'baby-shower': {
-      title: 'Baby shower', short: 'Baby shower', color: '#8FB0C8', image: 'b-newborn',
+      title: 'Baby shower', short: 'Baby shower', line: 'For the new arrival.', image: 'b-newborn',
       blurb: 'Soft, useful and lovely to unwrap, for the new arrival and the people looking after them.'
     },
     'wedding-invitations': {
-      title: 'Wedding invitations', short: 'Weddings', color: '#C9AE84', image: 'w-stationery-fabric',
+      title: 'Wedding invitations', short: 'Weddings', line: 'Invitation boxes and favours.', image: 'w-stationery-fabric',
       blurb: 'Invitation boxes, favours and family trunks, assembled and posted for you.',
       note: 'Personalised orders over 50 boxes need three weeks. Talk to us before you print.'
     },
     'birthday-for-her': {
-      title: 'Birthday for her', short: 'For her', color: '#C8607A', image: 'delivery-box',
+      title: 'Birthday for her', short: 'For her', line: 'Flowers and something to keep.', image: 'delivery-box',
       blurb: 'Flowers, something sparkling and something she’ll keep.'
     },
     'birthday-for-him': {
-      title: 'Birthday for him', short: 'For him', color: '#8C5E3C', image: 'm-whisky-glasses',
+      title: 'Birthday for him', short: 'For him', line: 'Whisky, coffee and the barbecue.', image: 'm-whisky-glasses',
       blurb: 'Good whisky, better coffee and something for the barbecue.'
     },
     christmas: {
-      title: 'Christmas', short: 'Christmas', color: '#B23A2E', image: 'x-wax-kraft',
+      title: 'Christmas', short: 'Christmas', line: 'Packed in kraft and pine.', image: 'x-wax-kraft',
       blurb: 'A summer Christmas, packed in kraft and pine. Pre-order now; we dispatch from 1 December.',
       note: 'Order by Friday 18 December for metro delivery before Christmas Day.'
     }
@@ -171,7 +171,7 @@ window.DIVZ_DATA = (function () {
       rating: 4.7, reviews: 22, badge: 'New', created: '2026-09-20',
       blurb: 'A first-day gift for new starters: a journal, a hand grinder and good coffee.',
       description: 'Make someone’s first week feel like a welcome. A linen journal, a ceramic hand grinder, 250g of house-blend beans and a handwritten note from their new team.',
-      options: [{ name: 'Box', swatch: true, values: [{ v: 'Bush', hex: '#1E3B2F' }, { v: 'Bone', hex: '#E9E4D8' }] }],
+      options: [{ name: 'Box', swatch: true, values: [{ v: 'Plum', hex: '#5A1E3C' }, { v: 'Bone', hex: '#E9E4D8' }] }],
       inside: [['Linen journal', 'Collingwood, VIC'], ['Ceramic hand grinder', 'Imported'], ['House-blend coffee beans, 250g', 'Marrickville, NSW'], ['Handwritten welcome note', 'Our studio']],
       dietary: ['Vegan', 'Alcohol-free']
     },

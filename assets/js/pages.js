@@ -1,12 +1,12 @@
-/* DIVZ prototype — page modules (one per Shopify template). */
+/* Zariva prototype — page modules (one per Shopify template). */
 (function () {
   'use strict';
-  const X = window.DIVZ;
+  const X = window.ZARIVA;
   const { D, $, $$, esc, money, params, I, img } = X;
   const pages = X.pages;
 
   /* =================================================================== shared bits */
-  const occLink = h => `<a href="collection.html?c=${h}"><span class="chip-dot" style="--c:${X.occColor(h)}"></span>${esc(D.collections[h].title)}</a>`;
+  const occLink = h => `<a href="collection.html?c=${h}">${esc(D.collections[h].title)}</a>`;
   function sydneyNow() {
     const parts = new Intl.DateTimeFormat('en-AU', { timeZone: 'Australia/Sydney', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date());
     const get = t => (parts.find(p => p.type === t) || {}).value;
@@ -78,18 +78,21 @@
       const go = () => {
         if (started) return; started = true;
         requestAnimationFrame(() => html.classList.add('unwrap-go'));
-        try { sessionStorage.setItem('divz-unwrapped', '1'); } catch (e) {}
+        try { sessionStorage.setItem('zariva-unwrapped', '1'); } catch (e) {}
         setTimeout(() => html.classList.remove('is-unwrapping', 'unwrap-go'), 3400);
       };
       if (heroImg.complete) setTimeout(go, 350); else { heroImg.addEventListener('load', () => setTimeout(go, 200)); setTimeout(go, 1600); }
     }
 
-    // 2. occasion tags on the ribbon rail
-    $('[data-tags]').innerHTML = D.OCCASIONS.map((h, i) => X.tagHTML(h, i)).join('');
+    // 2. occasion index
+    const occ = X.occasionIndexHTML();
+    $('[data-occ-list]').innerHTML = occ.rows;
+    $('[data-occ-stage]').innerHTML = occ.stage;
+    X.initOccasions(document);
 
     // 3. bestsellers
     $('[data-best-head]').outerHTML = X.sliderHead('<span id="best-h">Bestsellers</span>', 'What’s leaving our studio most this week.', '<a class="link" href="collection.html?c=bestsellers">Shop all bestsellers</a>');
-    $('[data-reels-head]').outerHTML = X.sliderHead('<span id="ugc-h">Unboxed by you</span>', 'Videos from people who sent and received our hampers. Tag <b>#divzunboxed</b> to share yours.', '');
+    $('[data-reels-head]').outerHTML = X.sliderHead('<span id="ugc-h">Unboxed by you</span>', 'Videos from people who sent and received our hampers. Tag <b>#zarivaunboxed</b> to share yours.', '');
     $('[data-home-stars]').innerHTML = X.starsHTML(D.reviewStats.average, 'stars--lg');
     $('[data-bestsellers]').innerHTML = X.inCollection('bestsellers').slice(0, 8).map(p => X.cardHTML(p, { sizes: '(max-width: 760px) 72vw, (max-width: 1200px) 33vw, 25vw' })).join('');
 
@@ -131,7 +134,7 @@
     let handle = q.get('c') || 'all';
     if (!D.collections[handle]) handle = 'all';
     const c = D.collections[handle];
-    document.title = `${c.title} | DIVZ`;
+    document.title = `${c.title} | Zariva`;
     const base = X.inCollection(handle);
     const state = {
       sort: q.get('sort') || 'featured',
@@ -152,9 +155,9 @@
         <div class="coll-hero__text">
           <h1 class="t-h1">${esc(c.title)}</h1>
           <p class="t-lead">${esc(c.blurb)}</p>
-          ${c.note ? `<p class="coll-hero__note"><span class="chip-dot" style="--c:${X.occColor(handle)}"></span>${esc(c.note)}</p>` : ''}
+          ${c.note ? `<p class="coll-hero__note"><span class="diamond" aria-hidden="true"></span>${esc(c.note)}</p>` : ''}
         </div>
-        <div class="coll-hero__tag">${X.tagHTML(handle, 0, { noLabel: true, len: 56, sizes: '300px' })}</div>
+        <div class="coll-hero__arch" aria-hidden="true">${X.img(c.image, { sizes: '(max-width: 1023px) 1px, 30vw', alt: '', eager: true })}</div>
       </div>`;
 
     // filters drawer
@@ -202,7 +205,7 @@
 
     // toolbar
     const quickChips = isOcc ? PRICE_BUCKETS.map(([v, l]) => `<button type="button" class="chip" data-chip-price="${v}" aria-pressed="false">${l}</button>`).join('')
-      : D.OCCASIONS.map(h => `<button type="button" class="chip" data-chip-occ="${h}" aria-pressed="false"><span class="chip-dot" style="--c:${X.occColor(h)}"></span>${esc(D.collections[h].short)}</button>`).join('');
+      : D.OCCASIONS.map(h => `<button type="button" class="chip" data-chip-occ="${h}" aria-pressed="false">${esc(D.collections[h].short)}</button>`).join('');
     $('[data-toolbar]').innerHTML = `<div class="container toolbar__inner">
       <button class="filter-btn" type="button" data-open="filters" aria-controls="filters" aria-expanded="false">${I.filter}Filter<span class="n" data-filter-n hidden></span></button>
       <div class="toolbar__chips" role="group" aria-label="${isOcc ? 'Filter by price' : 'Filter by occasion'}">${quickChips}</div>
@@ -319,7 +322,7 @@
       main.innerHTML = `<div class="container nf"><h1 class="t-h1">We couldn’t find that hamper.</h1><p class="t-lead">It may have sold out for the season. Try our bestsellers, or search for what you had in mind.</p><div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="collection.html?c=bestsellers">Shop bestsellers</a><button class="btn btn--secondary" type="button" data-open="search">Search</button></div></div>`;
       return;
     }
-    document.title = `${p.title} | DIVZ`;
+    document.title = `${p.title} | Zariva`;
     const sel = X.defaultSel(p);
     const card = { on: true, to: '', msg: '', from: '' };
     const occ = p.occasions[0];
@@ -331,8 +334,8 @@
     const reviewsList = myReviews.concat(otherReviews).slice(0, 6);
 
     // recently viewed (theme feature, stored per browser)
-    const rv = X.store.get('divz-recent', []).filter(h => h !== p.handle);
-    X.store.set('divz-recent', [p.handle].concat(rv).slice(0, 8));
+    const rv = X.store.get('zariva-recent', []).filter(h => h !== p.handle);
+    X.store.set('zariva-recent', [p.handle].concat(rv).slice(0, 8));
 
     main.innerHTML = `
     <div class="container">
@@ -412,7 +415,7 @@
 
     <section class="section section--mist" aria-labelledby="ugc-h" data-reel-list>
       <div class="container slider">
-        ${X.sliderHead('<span id="ugc-h">Unboxed by you</span>', 'Videos our customers sent us. Tag <b>#divzunboxed</b> and we might share yours.', '')}
+        ${X.sliderHead('<span id="ugc-h">Unboxed by you</span>', 'Videos our customers sent us. Tag <b>#zarivaunboxed</b> and we might share yours.', '')}
         <div class="slider__track reels__track" data-pdp-reels></div>
       </div>
     </section>
@@ -506,7 +509,7 @@
     const buyNow = e => {
       e.preventDefault();
       if (X.isSoldOut(p, sel)) return;
-      try { sessionStorage.setItem('divz-buynow', JSON.stringify({ handle: p.handle, sel, qty: qty(), card: cardPayload() })); } catch (err) {}
+      try { sessionStorage.setItem('zariva-buynow', JSON.stringify({ handle: p.handle, sel, qty: qty(), card: cardPayload() })); } catch (err) {}
       location.href = 'checkout.html?buynow=1';
     };
     $('[data-buynow]').addEventListener('click', buyNow);
@@ -600,14 +603,14 @@
   /* =================================================================== CHECKOUT (Shopify-hosted in production) */
   pages.checkout = function () {
     let lines;
-    const buyNow = params().has('buynow') && (() => { try { return JSON.parse(sessionStorage.getItem('divz-buynow')); } catch (e) { return null; } })();
+    const buyNow = params().has('buynow') && (() => { try { return JSON.parse(sessionStorage.getItem('zariva-buynow')); } catch (e) { return null; } })();
     if (buyNow && X.product(buyNow.handle)) {
       const p = X.product(buyNow.handle), vp = X.variantPrice(p, buyNow.sel);
       lines = [{ id: 'buynow', handle: p.handle, p, sel: buyNow.sel, qty: buyNow.qty, card: buyNow.card, price: vp.price, total: vp.price * buyNow.qty, variant: X.variantTitle(p, buyNow.sel) }];
     } else lines = X.Cart.lines();
     const root = $('[data-checkout]');
     if (!lines.length) {
-      root.innerHTML = `<div class="co__main" style="grid-column:1/-1;justify-content:center"><div class="co__main-inner" style="padding-top:80px"><a class="logo" href="index.html"><span class="logo__word">DIVZ</span></a><h1 class="t-h2" style="margin-top:40px">Your bag is empty.</h1><p class="t-muted" style="margin:12px 0 24px">Add a hamper to check out.</p><a class="btn" href="collection.html?c=bestsellers">Shop bestsellers</a></div></div>`;
+      root.innerHTML = `<div class="co__main" style="grid-column:1/-1;justify-content:center"><div class="co__main-inner" style="padding-top:80px"><a class="logo" href="index.html" aria-label="House of Zariva">${X.logoHTML()}</a><h1 class="t-h2" style="margin-top:40px">Your bag is empty.</h1><p class="t-muted" style="margin:12px 0 24px">Add a hamper to check out.</p><a class="btn" href="collection.html?c=bestsellers">Shop bestsellers</a></div></div>`;
       return;
     }
     const sub = lines.reduce((n, l) => n + l.total, 0);
@@ -625,8 +628,8 @@
     root.innerHTML = `
       <div class="co__main">
         <div class="co__main-inner">
-          <div class="co__header"><a class="logo" href="index.html" aria-label="DIVZ, back to the store"><span class="logo__word">DIVZ</span></a><a class="icon-btn" href="cart.html" aria-label="Back to your bag">${I.bag}</a></div>
-          <p class="proto-note">Prototype checkout. In production this page is Shopify Checkout with DIVZ branding (logo, colours, fonts). Nothing you enter is sent anywhere.</p>
+          <div class="co__header"><a class="logo" href="index.html" aria-label="House of Zariva, back to the store">${X.logoHTML()}</a><a class="icon-btn" href="cart.html" aria-label="Back to your bag">${I.bag}</a></div>
+          <p class="proto-note">Prototype checkout. In production this page is Shopify Checkout with Zariva branding (logo, colours, fonts). Nothing you enter is sent anywhere.</p>
           <form data-co-form novalidate>
             <div class="co__block"><p class="t-meta" style="text-align:center;margin-bottom:12px">Express checkout</p>
               <div class="express"><button type="button" class="sp" data-express>Shop Pay</button><button type="button" class="pp" data-express>PayPal</button><button type="button" class="gp" data-express>G Pay</button></div>
@@ -676,7 +679,7 @@
     function renderShip() {
       const pc = $('#postcode').value.trim();
       const z = postcodeZone(pc);
-      if (!z) { shipBox.innerHTML = '<p class="t-small t-muted" style="padding:16px;background:#F6F7F5;border-radius:6px">Enter your delivery address to see shipping methods.</p>'; st.ship = null; renderTotals(); return; }
+      if (!z) { shipBox.innerHTML = '<p class="t-small t-muted" style="padding:16px;background:#F8F4F5;border-radius:6px">Enter your delivery address to see shipping methods.</p>'; st.ship = null; renderTotals(); return; }
       const avail = SHIP.filter(s => !s.metro || z.zone === 'syd' || z.zone === 'mel');
       if (!st.ship || !avail.find(s => s.id === st.ship)) st.ship = avail[0].id;
       shipBox.innerHTML = `<div class="ship-opts" role="radiogroup" aria-label="Shipping method">${avail.map(s => `<label class="ship-opt ${st.ship === s.id ? 'is-selected' : ''}"><span class="check" style="pointer-events:none"><input type="radio" name="ship" value="${s.id}" ${st.ship === s.id ? 'checked' : ''}></span><span class="grow">${s.name}<small>${s.note}</small></span><b>${s.price ? money(s.price, true) : 'Free'}</b></label>`).join('')}</div>`;
@@ -745,15 +748,15 @@
     function thankYou() {
       const total = renderTotals();
       const name = $('#first').value.trim();
-      const order = 'DIVZ' + (1040 + Math.floor(Math.random() * 900));
+      const order = 'ZA' + (1040 + Math.floor(Math.random() * 900));
       const shipName = SHIP.find(s => s.id === st.ship).name;
       const ST = { 'Australian Capital Territory': 'ACT', 'New South Wales': 'NSW', 'Northern Territory': 'NT', Queensland: 'QLD', 'South Australia': 'SA', Tasmania: 'TAS', Victoria: 'VIC', 'Western Australia': 'WA' };
       const addr = `${$('#address').value}, ${$('#suburb').value} ${ST[$('#state').value] || $('#state').value} ${$('#postcode').value}`;
       if (!buyNow) X.Cart.clear();
       $('[data-discount]').hidden = true; $('[data-code-msg]').hidden = true;
-      try { sessionStorage.removeItem('divz-buynow'); } catch (e) {}
+      try { sessionStorage.removeItem('zariva-buynow'); } catch (e) {}
       $('.co__main-inner').innerHTML = `
-        <div class="co__header"><a class="logo" href="index.html"><span class="logo__word">DIVZ</span></a></div>
+        <div class="co__header"><a class="logo" href="index.html" aria-label="House of Zariva">${X.logoHTML()}</a></div>
         <div class="ty">
           <div class="ty__head"><span class="ty__check">${I.check}</span><div><p class="t-meta">Order #${order}</p><h1 class="t-h3">Thank you, ${esc(name)}.</h1></div></div>
           <div class="ty__map" role="img" aria-label="Delivery location"></div>
@@ -773,7 +776,7 @@
     const input = $('[data-sp-input]');
     input.value = q;
     const res = q ? X.searchProducts(q) : [];
-    document.title = q ? `Search: ${q} | DIVZ` : 'Search | DIVZ';
+    document.title = q ? `Search: ${q} | Zariva` : 'Search | Zariva';
     $('[data-sp-title]').textContent = q ? `${res.length} result${res.length === 1 ? '' : 's'} for “${q}”` : 'Search';
     const grid = $('[data-sp-grid]');
     if (q && res.length) grid.innerHTML = `<div class="grid">${res.map(p => X.cardHTML(p)).join('')}</div>`;
@@ -793,7 +796,7 @@
     $('[data-photo-strip]').innerHTML = withPhotos.map(r => `<button type="button" data-lightbox="${r.photo}" aria-label="Photo from ${esc(r.name)}">${img(r.photo, { sizes: '200px' })}</button>`).join('');
     const occs = D.OCCASIONS;
     $('[data-rev-filters]').innerHTML = `
-      <div class="rev-filters__chips" role="group" aria-label="Filter by occasion"><button type="button" class="chip" data-occ="" aria-pressed="true">All</button>${occs.map(h => `<button type="button" class="chip" data-occ="${h}" aria-pressed="false"><span class="chip-dot" style="--c:${X.occColor(h)}"></span>${esc(D.collections[h].short)}</button>`).join('')}</div>
+      <div class="rev-filters__chips" role="group" aria-label="Filter by occasion"><button type="button" class="chip" data-occ="" aria-pressed="true">All</button>${occs.map(h => `<button type="button" class="chip" data-occ="${h}" aria-pressed="false">${esc(D.collections[h].short)}</button>`).join('')}</div>
       <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap"><label class="check t-small"><input type="checkbox" data-photos><span>With photos</span></label>
         <div class="sort"><label for="rsort">Sort by</label><select id="rsort" data-rsort><option value="recent">Most recent</option><option value="high">Highest rated</option><option value="low">Lowest rated</option><option value="helpful">Most helpful</option></select></div></div>`;
     function list() {
@@ -882,19 +885,19 @@
   /* =================================================================== ACCOUNT */
   pages.account = function () {
     const root = $('[data-account]');
-    const signedIn = () => X.store.get('divz-account', null);
+    const signedIn = () => X.store.get('zariva-account', null);
     function render() {
       const acc = signedIn();
       if (acc) {
         root.innerHTML = `<h1 class="t-h2">Hello, ${esc(acc.first || 'there')}.</h1>
           <p class="t-muted">Signed in as ${esc(acc.email)}.</p>
           <div><h2 class="t-h4" style="margin-bottom:12px">Your orders</h2><ul class="orders">
-            <li><span>#DIVZ1031<br><span class="t-small t-muted">The Diya Hamper, Grand</span></span><span class="status">Packing</span><span class="price">$229.00</span></li>
-            <li><span>#DIVZ0987<br><span class="t-small t-muted">Birthday Bloom</span></span><span class="status">Delivered</span><span class="price">$169.00</span></li>
+            <li><span>#ZA1031<br><span class="t-small t-muted">The Diya Hamper, Grand</span></span><span class="status">Packing</span><span class="price">$229.00</span></li>
+            <li><span>#ZA0987<br><span class="t-small t-muted">Birthday Bloom</span></span><span class="status">Delivered</span><span class="price">$169.00</span></li>
           </ul></div>
           <div><h2 class="t-h4" style="margin-bottom:12px">Saved addresses</h2><p class="t-small">Mum, 14 Wattle St, Parramatta NSW 2150<br>Office, Level 3, 88 George St, Sydney NSW 2000</p></div>
           <button class="btn btn--secondary" type="button" data-signout>Sign out</button>`;
-        $('[data-signout]').addEventListener('click', () => { X.store.set('divz-account', null); render(); });
+        $('[data-signout]').addEventListener('click', () => { X.store.set('zariva-account', null); render(); });
         return;
       }
       root.innerHTML = `<div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-tab="in" id="t-in" aria-controls="p-in">Sign in</button><button role="tab" aria-selected="false" data-tab="up" id="t-up" aria-controls="p-up">Create account</button></div>
@@ -927,7 +930,7 @@
         });
         if (!ok) return;
         const first = f.id === 'p-up' ? $('#af').value.trim() : email.value.split('@')[0].replace(/[^a-z]/gi, ' ').trim().split(' ')[0];
-        X.store.set('divz-account', { email: email.value.trim(), first: first ? first[0].toUpperCase() + first.slice(1) : '' });
+        X.store.set('zariva-account', { email: email.value.trim(), first: first ? first[0].toUpperCase() + first.slice(1) : '' });
         render();
       }));
     }
