@@ -1,0 +1,6 @@
+# Not needed to run the prototype online, so not published with it.
+# The full-resolution banners and raw client files stay in the repository for whoever uploads them.
+banners/
+raw/
+README.md
+tools/

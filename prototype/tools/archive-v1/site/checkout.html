@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout | House of Zariva</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/proto.css">
+</head>
+<body data-page="checkout">
+<!-- Shopify Checkout, as branded in the checkout editor: logo, colours, Jost, 2px corners.
+     Content changes beyond branding need Shopify Plus; this mock shows what the client gets without it. -->
+<div class="co">
+  <div class="co__main" data-note="1" data-build="native" data-build-label="Shopify Checkout, branded in the checkout editor (logo, colours, font, corners)">
+    <div id="logo" style="padding-bottom:8px"></div>
+    <div data-note="2" data-build="native" data-build-label="Express checkout: Shop Pay, PayPal, Google Pay, Apple Pay">
+      <p class="small muted" style="text-align:center;margin-bottom:10px">Express checkout</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><a class="shoppay" href="#pay" data-express>Shop <b>Pay</b></a><a class="shoppay" href="#pay" data-express style="background:#ffc439;color:#1c1719"><b>PayPal</b></a><a class="shoppay" href="#pay" data-express style="background:#1c1719"><b>G Pay</b></a></div>
+      <p class="small muted" style="text-align:center;margin-top:14px">or</p>
+    </div>
+    <form id="co" style="display:grid;gap:28px" novalidate>
+      <fieldset><h2>Contact</h2><input class="input" type="email" placeholder="Email" required aria-label="Email"><label class="check"><input type="checkbox" checked>Email me before each occasion</label></fieldset>
+      <fieldset><h2>Delivery</h2>
+        <select class="select" aria-label="Country"><option>Australia</option></select>
+        <div class="fields-2"><input class="input" placeholder="First name" aria-label="First name"><input class="input" placeholder="Last name" aria-label="Last name"></div>
+        <input class="input" placeholder="Address" aria-label="Address">
+        <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:12px"><input class="input" placeholder="Suburb" aria-label="Suburb"><select class="select" aria-label="State"><option>NSW</option><option>VIC</option><option>QLD</option><option>WA</option><option>SA</option><option>TAS</option><option>ACT</option><option>NT</option></select><input class="input num" id="pc" placeholder="Postcode" inputmode="numeric" maxlength="4" aria-label="Postcode"></div>
+        <input class="input" placeholder="Phone, for the courier" aria-label="Phone">
+      </fieldset>
+      <fieldset data-note="3" data-build="native" data-build-label="Shipping rates: Shopify shipping profiles + local delivery (same-day by postcode)"><h2>Delivery method</h2><div class="radio-rows" id="methods"></div></fieldset>
+      <fieldset id="pay"><h2>Payment</h2><p class="small muted">All transactions are secure and encrypted.</p>
+        <div class="radio-rows"><label class="radio-row"><input type="radio" name="pm" checked><b>Credit card</b><span class="small muted">Visa · Mastercard · Amex</span></label><label class="radio-row" data-build="app" data-build-label="Afterpay payment method"><input type="radio" name="pm"><b>Afterpay</b><span class="small muted" id="ap"></span></label><label class="radio-row"><input type="radio" name="pm"><b>PayPal</b><span></span></label></div>
+        <div style="display:grid;gap:10px"><input class="input num" placeholder="Card number" aria-label="Card number"><div class="fields-2"><input class="input num" placeholder="MM / YY" aria-label="Expiry"><input class="input num" placeholder="Security code" aria-label="Security code"></div><input class="input" placeholder="Name on card" aria-label="Name on card"></div>
+      </fieldset>
+      <button class="btn btn--plum btn--block" type="submit" id="paynow">Pay now</button>
+      <p class="small muted" style="text-align:center"><a class="link" href="cart.html">Return to bag</a> · Refund policy · Shipping · Privacy · Terms</p>
+    </form>
+  </div>
+  <aside class="co__side" id="side" data-note="4" data-build="native" data-build-label="Order summary: line item properties (card) and cart attributes (date, packing slip)"></aside>
+</div>
+<script src="assets/data.js"></script>
+<script src="assets/zariva.js"></script>
+<script>
+(function () {
+  const { $, $$, esc, money, img } = Z;
+  $('#logo').innerHTML = Z.logo();
+  const c = Z.cart.get();
+  let discount = 0, ship = 0;
+  const sub = Z.cart.subtotal();
+  const methods = () => {
+    const pc = $('#pc').value.trim();
+    const same = /^\d{4}$/.test(pc) && Z.isSameDay(pc);
+    const free = sub >= Z.D.delivery.freeOver;
+    const rows = [
+      ['standard', 'Standard', `Arrives ${c.attrs.date ? Z.fmtLong(Z.parse(c.attrs.date)) : 'in 2 business days'}`, free ? 0 : 12],
+      ['express', 'Express', 'Next business day', 18],
+      ['same', 'Same-day', same ? 'Order by 11am. Sydney and Melbourne metro' : 'Enter a Sydney or Melbourne metro postcode', 25, !same],
+    ];
+    $('#methods').innerHTML = rows.map(([v, n, d, p, off]) => `<label class="radio-row${off ? ' is-off' : ''}"><input type="radio" name="ship" value="${p}" ${off ? 'disabled' : ''} ${v === 'standard' ? 'checked' : ''}><span><b>${n}</b><br><span class="muted" style="font-size:.75rem">${d}</span></span><span class="num">${p ? money(p) : 'Free'}</span></label>`).join('');
+    ship = rows[0][3];
+    draw();
+  };
+  const draw = () => {
+    const total = Math.max(0, sub - discount) + ship;
+    $('#ap').textContent = `4 × ${money(total / 4)}`;
+    $('#paynow').textContent = `Pay now · ${money(total)}`;
+    $('#side').innerHTML = (c.lines.length ? c.lines.map((l) => `<div class="co__line"><span class="media" style="position:relative">${`<img src="${img(l.image)}" alt="">`}<span class="bag-count" style="top:-6px;right:-6px;display:block">${l.qty}</span></span>
+      <span style="display:grid;gap:2px"><b style="font-weight:500">${esc(l.title)}</b><span class="muted" style="font-size:.75rem">${Object.values(l.opts || {}).map(esc).join(' · ')}</span>${l.props && l.props.To ? `<span class="muted" style="font-size:.75rem">To: ${esc(l.props.To)}</span>` : ''}${l.props && l.props.Message ? `<span class="muted" style="font-size:.75rem">Message: ${esc(l.props.Message.slice(0, 60))}${l.props.Message.length > 60 ? '…' : ''}</span>` : ''}${l.build ? `<span class="muted" style="font-size:.75rem">${l.build.items.map(esc).join(', ')}</span>` : ''}</span>
+      <span class="num">${money(l.unit * l.qty)}</span></div>`).join('') : '<p class="muted">Your bag is empty. <a class="link" href="index.html">Back to the shop</a></p>') +
+      `<div class="postcode"><input class="input" id="code" placeholder="Discount code" aria-label="Discount code" style="max-width:none"><button class="btn btn--line" type="button" id="apply" style="min-height:48px">Apply</button></div><p class="small" id="code-msg" style="color:var(--plum)"></p>
+      <div class="bag-sum"><div class="bag-sum__row"><span>Subtotal</span><span class="num">${money(sub)}</span></div>${discount ? `<div class="bag-sum__row"><span>WELCOME10</span><span class="num">−${money(discount)}</span></div>` : ''}<div class="bag-sum__row"><span>Delivery</span><span class="num">${ship ? money(ship) : 'Free'}</span></div>
+      ${c.attrs.date ? `<div class="bag-sum__row"><span>Arrival</span><span>${Z.fmtLong(Z.parse(c.attrs.date))}</span></div>` : ''}${c.attrs.hidePrices ? '<div class="bag-sum__row"><span>Packing slip</span><span>No prices</span></div>' : ''}
+      <div class="rule" style="margin:8px 0"></div><div class="bag-sum__total"><span>Total <span class="small muted">AUD, incl. ${money(total / 11)} GST</span></span><strong class="num">${money(total)}</strong></div></div>`;
+    $('#apply').onclick = () => { const v = $('#code').value.trim().toUpperCase(); if (v === 'WELCOME10') { discount = Math.round(sub * 0.1); draw(); } else $('#code-msg').textContent = 'Enter a valid discount code. (Try WELCOME10.)'; };
+  };
+  $('#pc').addEventListener('input', () => { if ($('#pc').value.length === 4 || $('#pc').value.length === 0) methods(); });
+  document.addEventListener('change', (e) => { if (e.target.name === 'ship') { ship = Number(e.target.value); draw(); } });
+  const thanks = (e) => {
+    e && e.preventDefault();
+    const first = (c.lines[0] && c.lines[0].props && c.lines[0].props.To) || 'them';
+    $('.co__main').innerHTML = `${Z.logo()}<div class="thanks"><p class="eyebrow"><span class="diamond"></span>Order ZR-1048 confirmed</p><h1 class="h1">Thank you. We’ll take it from here.</h1><p class="lead">We’re writing the card for ${esc(first)} now. You’ll get an email when the hamper leaves the studio${c.attrs.date ? `, and it arrives ${Z.fmtLong(Z.parse(c.attrs.date))}` : ''}.</p><a class="btn btn--plum" href="index.html">Back to the shop</a></div>`;
+    Z.store.set('zariva:cart', { lines: [], attrs: { date: '', hidePrices: false, note: '' } });
+  };
+  $('#co').addEventListener('submit', thanks);
+  $$('[data-express]').forEach((a) => a.addEventListener('click', thanks));
+  methods();
+})();
+</script>
+<script src="assets/proto.js"></script>
+</body>
+</html>

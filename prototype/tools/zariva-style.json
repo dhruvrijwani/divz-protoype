@@ -1,0 +1,20 @@
+{
+  "_note": "House of Zariva as an Intellect theme style: the client's colours on Intellect's own type (Archivo) and components. White, sharp, minimal.",
+  "color_schemes": {
+    "scheme-1": { "settings": { "background": "#FFFFFF", "background_gradient": "", "surface": "#F6F4F5", "text": "#1C1719", "accent": "#5A1E3C", "button": "#5A1E3C", "button_label": "#FFFFFF", "secondary_button_label": "#1C1719" } },
+    "scheme-2": { "settings": { "background": "#FFFFFF", "background_gradient": "", "surface": "#F6F4F5", "text": "#1C1719", "accent": "#5A1E3C", "button": "#1C1719", "button_label": "#FFFFFF", "secondary_button_label": "#1C1719" } },
+    "scheme-3": { "settings": { "background": "#1C1719", "background_gradient": "", "surface": "#2A2326", "text": "#FFFFFF", "accent": "#C9A46A", "button": "#FFFFFF", "button_label": "#1C1719", "secondary_button_label": "#FFFFFF" } },
+    "scheme-4": { "settings": { "background": "#5A1E3C", "background_gradient": "", "surface": "#6B2849", "text": "#FFFFFF", "accent": "#E9CFA0", "button": "#FFFFFF", "button_label": "#5A1E3C", "secondary_button_label": "#FFFFFF" } },
+    "scheme-5": { "settings": { "background": "#F6F4F5", "background_gradient": "", "surface": "#FFFFFF", "text": "#1C1719", "accent": "#5A1E3C", "button": "#5A1E3C", "button_label": "#FFFFFF", "secondary_button_label": "#1C1719" } }
+  },
+  "type_system": "intellect", "heading_width": 104, "heading_weight": 520, "body_weight": 400,
+  "heading_scale": 95, "heading_line": 100, "heading_tracking": -2, "heading_case": "none", "heading_emphasis": "accent", "caption_style": "label-upper",
+  "radius_media": 0, "radius_button": 0, "radius_input": 0, "button_size": "regular", "button_case": "none", "button_hover": "roll",
+  "header_shape": "bar", "header_logo": "logo-center", "media_shape": "rectangle", "ornament": "none", "texture": "none", "image_tone": "natural",
+  "button_shadow": "none", "border_weight": "thin",
+  "card_style": "stacked", "card_ratio": "portrait", "badge_shape": "text", "swatch_shape": "circle",
+  "motion_level": "subtle", "reveal_headings": "fade", "reveal_images": "curtain",
+  "section_spacing": 96, "grid_gap": 16, "page_width": 1240, "page_margin": 40, "page_margin_mobile": 20,
+  "badge_sale_bg": "#5A1E3C", "badge_custom_bg": "#FFFFFF", "badge_custom_text": "#1C1719",
+  "pip_enable": false, "moment": "off", "smooth_scroll": true, "custom_cursor": false
+}

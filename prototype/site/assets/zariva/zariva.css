@@ -1,0 +1,59 @@
+/* House of Zariva: the few customisations on top of Intellect's own CSS.
+   Everything else on the page is Intellect, styled by the Zariva theme style (theme-vars.css). */
+
+/* White everywhere; the client's colours do the rest. */
+html, body { background: #fff; }
+
+/* Intellect type everywhere: emphasis and the gift card use Archivo, never a library serif. */
+:root {
+  --font-accent: "Intellect Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-accent-weight: 400;
+  --font-accent-style: italic;
+}
+
+/* Logo: the client's arch and diamond, with the name set in Intellect type. */
+.z-logo { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; color: var(--accent, #5a1e3c); line-height: 1; }
+.z-logo__mark { width: 16px; height: 20px; }
+.z-logo__house { font: 500 0.5rem/1 var(--font-body); letter-spacing: 0.42em; margin-right: -0.42em; text-transform: uppercase; opacity: 0.7; }
+.z-logo__name { font: 600 1.375rem/1 var(--font-heading); font-stretch: 125%; letter-spacing: 0.3em; margin-right: -0.3em; text-transform: uppercase; }
+@media (min-width: 990px) { .z-logo__name { font-size: 1.55rem; } }
+.header__bar :is(.z-logo) { color: inherit; }
+.menu-drawer .z-logo { align-items: flex-start; }
+
+/* The arrival line under each card. */
+.card__note { margin-top: 2px; }
+
+/* What's inside, in the product accordion. */
+.z-inside { list-style: none; margin: 0 0 12px; padding: 0; }
+.z-inside li { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.z-inside li span:last-child { text-align: right; }
+
+/* Shop Pay, standing in for Shopify's dynamic checkout button. */
+.z-shoppay { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 48px; background: #5a31f4; color: #fff; font-weight: 500; text-decoration: none; }
+.z-shoppay b { font-weight: 700; }
+
+/* Bag: the arrival day chosen with Gift Mode. */
+.z-cart-attr { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+
+/* No decorative marks before labels. */
+.announcement__dot { display: none; }
+
+/* Success states (free delivery reached) in the brand plum rather than green. */
+:root { --color-success: #5a1e3c; }
+
+/* Checkout (Shopify Checkout, branded): only for the prototype journey. */
+.z-co { display: grid; gap: 40px; }
+@media (min-width: 990px) { .z-co { grid-template-columns: 1fr 420px; gap: 72px; } }
+.z-co__main { display: grid; gap: 16px; align-content: start; }
+.z-co__main .logo { justify-self: start; margin-bottom: 12px; }
+.z-co__main h2 { margin-top: 12px; }
+.z-co__row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.z-co__express { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.z-co__express a { display: grid; place-items: center; min-height: 48px; text-decoration: none; }
+.z-paypal { background: #ffc439; color: #1c1719; } .z-gpay { background: #1c1719; color: #fff; }
+.z-co__rates { display: grid; border: 1px solid var(--line); }
+.z-co__rate { display: flex; justify-content: space-between; gap: 12px; padding: 14px 16px; }
+.z-co__rate + .z-co__rate { border-top: 1px solid var(--line); }
+.z-co__rate.is-disabled { opacity: 0.5; }
+.z-co__side { display: grid; gap: 16px; align-content: start; padding: 28px; background: var(--surface); }
+.z-co__line { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: start; padding-bottom: 14px; border-bottom: 1px solid var(--line); }

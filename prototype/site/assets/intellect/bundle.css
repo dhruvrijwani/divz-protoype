@@ -1,0 +1,79 @@
+/* Intellect · bundle.css — Build a box. */
+
+.box { display: grid; gap: 32px; align-items: start; }
+@media (min-width: 990px) { .box { grid-template-columns: minmax(0, 1fr) 380px; gap: 48px; } }
+.box__grid { display: grid; gap: calc(var(--grid-gap) * 1.6) var(--grid-gap); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 750px) { .box__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.box-item { display: flex; flex-direction: column; gap: 10px; }
+.box-item__media { position: relative; }
+.box-item__count { position: absolute; top: 10px; right: 10px; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--text); color: var(--bg); font-family: var(--font-label); font-size: 0.74rem; animation: rise-in 0.5s var(--ease-spring) both; }
+.box-item__info { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.box-item__title { font-size: 0.92rem; }
+.box-item__variant .select__select { min-height: 40px; font-size: 0.84rem; border-radius: 999px; }
+.box-item__add { width: 100%; }
+.box-item.is-soldout { opacity: 0.5; }
+
+.box__panel {
+  position: sticky; top: calc(var(--header-offset, 0px) + 24px);
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 20px; border-radius: calc(var(--radius-media) + 6px);
+  background: var(--surface);
+}
+.box__sizes { position: relative; display: flex; padding: 4px; border-radius: 999px; background: var(--bg); }
+.box__size-pill { position: absolute; top: 4px; bottom: 4px; left: 4px; border-radius: 999px; background: var(--text); transition: transform 0.55s var(--ease-spring-soft), width 0.55s var(--ease-out); }
+.box__size { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 4px; border-radius: 999px; font-family: var(--font-heading); font-size: 1.15rem; line-height: 1.1; transition: color 0.35s; }
+.box__size .caption { font-size: 0.66rem; }
+.box__size.is-active { color: var(--bg); }
+.box__size.is-active .caption { color: inherit; opacity: 0.7; }
+
+.box__crate { position: relative; padding: 14px; border-radius: calc(var(--radius-media) + 2px); background: var(--bg); perspective: 900px; }
+.box__slots { display: grid; gap: 8px; grid-template-columns: repeat(min(var(--slots), 4), minmax(0, 1fr)); }
+.box__slot { position: relative; aspect-ratio: 1; border-radius: max(6px, calc(var(--radius-media) - 4px)); border: 1.5px dashed var(--line-strong); display: grid; place-items: center; font-family: var(--font-label); font-size: 0.78rem; color: var(--muted); overflow: hidden; transition: border-color 0.3s; }
+.box__slot.is-filled { border-style: solid; border-color: transparent; }
+.box__slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.box__remove { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 50%; background: rgb(255 255 255 / 0.9); color: #111; font-size: 14px; line-height: 1; opacity: 0; transition: opacity 0.2s; }
+.box__slot:hover .box__remove, .box__remove:focus-visible { opacity: 1; }
+@media (hover: none) { .box__remove { opacity: 1; } }
+.box__lid {
+  position: absolute; inset: -2px; z-index: 2; border-radius: inherit;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 88%, #fff), var(--accent));
+  transform-origin: top; transform: rotateX(100deg); opacity: 0; pointer-events: none;
+  transition: transform 0.85s var(--ease-in-out), opacity 0.2s 0.65s;
+  display: grid; place-items: center; overflow: hidden;
+  box-shadow: 0 30px 40px -30px rgb(0 0 0 / 0.5);
+}
+.box__ribbon { position: absolute; inset: 0; background: linear-gradient(90deg, transparent calc(50% - 10px), rgb(255 255 255 / 0.9) calc(50% - 10px), rgb(255 255 255 / 0.9) calc(50% + 10px), transparent calc(50% + 10px)); transform: scaleY(0); transform-origin: top; transition: transform 0.6s var(--ease-out) 0.85s; }
+.box__tag { position: relative; z-index: 1; padding: 8px 16px; border-radius: 4px; background: #fff; color: #111; font-family: var(--font-accent); font-style: var(--font-accent-style); font-size: 1.1rem; transform: rotate(-6deg) scale(0); transition: transform 0.6s var(--ease-spring) 1.3s; }
+.box__crate.is-closed .box__lid { transform: none; opacity: 1; transition: transform 0.85s var(--ease-in-out), opacity 0.1s; }
+.box__crate.is-closed .box__ribbon { transform: none; }
+.box__crate.is-closed .box__tag { transform: rotate(-6deg); }
+
+.box__meter { height: 3px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.box__meter span { display: block; height: 100%; background: var(--text); transform-origin: left; transform: scaleX(0); transition: transform 0.6s var(--ease-out); }
+.box__progress { font-size: 0.88rem; }
+.box__totals { display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem; margin: 0; }
+.box__totals div { display: flex; justify-content: space-between; }
+.box__totals dd { margin: 0; font-variant-numeric: tabular-nums; }
+.box__saving dd { color: var(--accent); }
+.box__total { font-size: 1.05rem; font-weight: var(--font-body-weight-medium); padding-top: 6px; border-top: 1px solid var(--line); }
+.box__reopen { align-self: center; }
+.box__note { text-align: center; }
+.box__ghost { position: fixed; z-index: 300; object-fit: cover; pointer-events: none; box-shadow: 0 20px 40px -18px rgb(0 0 0 / 0.45); }
+
+/* Mobile: the box becomes a tray at the bottom of the screen. */
+.box__tray { display: none; }
+@media (max-width: 989px) {
+  .box__panel { position: fixed; z-index: 44; left: 8px; right: 8px; bottom: 76px; max-height: 72vh; overflow-y: auto; transform: translateY(calc(100% + 90px)); transition: transform 0.6s var(--ease-out); box-shadow: 0 -10px 40px -20px rgb(0 0 0 / 0.4); }
+  .box.tray-open .box__panel { transform: none; }
+  .box__tray {
+    position: fixed; z-index: 45; left: 8px; right: 8px; bottom: calc(10px + env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 16px 10px 10px; border-radius: 999px;
+    background: var(--text); color: var(--bg);
+    box-shadow: 0 16px 40px -18px rgb(0 0 0 / 0.5);
+  }
+  .box__tray-slots { display: flex; gap: 4px; }
+  .box__tray-slots img, .box__tray-slots i { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px dashed rgb(255 255 255 / 0.4); display: block; }
+  .box__tray-slots img { border: 0; }
+  .box__tray-text { font-family: var(--font-label); font-size: 0.8rem; }
+}

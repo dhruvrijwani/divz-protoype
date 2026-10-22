@@ -1,0 +1,21 @@
+/* Presentation layer: build labels, note pins, standalone notice.
+   Not part of the client's design; toggled from the presentation shell. */
+.bl { position: absolute; left: 0; top: 0; z-index: 6; display: none; align-items: center; gap: 6px; width: max-content; max-width: min(340px, 86vw); padding: 3px 8px 3px 6px;
+  font: 600 10.5px/1.25 "Helvetica Neue", Arial, sans-serif; letter-spacing: .02em; color: #fff; text-align: left; white-space: normal; pointer-events: none; text-transform: none; font-style: normal; }
+.bl b { font-weight: 700; letter-spacing: .06em; }
+.bl i { font-style: normal; font-weight: 500; opacity: .92; }
+body.is-build .bl { display: inline-flex; }
+.bl--tab { transform: translateY(-100%); }
+body.is-build [data-build] { outline: 1.5px dashed var(--bl-color, #17683f); outline-offset: -1.5px; }
+.bl-host { position: relative; }
+
+.pin { position: absolute; right: 8px; top: 8px; z-index: 7; display: none; place-items: center; width: 26px; height: 26px; padding: 0; border-radius: 50%; background: #141b33; color: #fff; border: 2px solid #fff;
+  font: 700 12px/1 "Helvetica Neue", Arial, sans-serif; box-shadow: 0 2px 10px rgba(0, 0, 0, .35); cursor: pointer; }
+body.is-notes .pin { display: grid; }
+.pin.is-hot { background: #b4955a; color: #141b33; transform: scale(1.25); transition: transform .3s ease; }
+[data-note].is-hot { outline: 2px solid #b4955a; outline-offset: 2px; }
+
+.proto { position: relative; z-index: 32; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2px 14px; padding: 8px 44px 8px 16px;
+  background: #e9e3d6; color: #141b33; font: 400 12px/1.4 "Helvetica Neue", Arial, sans-serif; text-align: center; }
+.proto a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.proto button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 32px; height: 32px; border: 0; background: none; font-size: 20px; color: inherit; cursor: pointer; }

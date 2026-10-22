@@ -1,0 +1,11 @@
+/* House of Zariva type, self-hosted (SIL Open Font License).
+   Cormorant Garamond: display, always upright. Jost: everything you read and press.
+   La Belle Aurore: only the handwritten card preview.
+   In Shopify: Jost is in the font library; Cormorant Garamond is uploaded to Files and set in
+   Intellect's Typography → Licensed fonts. */
+@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 500; font-display: swap; src: url("cormorant-garamond-500.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 600; font-display: swap; src: url("cormorant-garamond-600.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 400; font-display: swap; src: url("jost-400.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 500; font-display: swap; src: url("jost-500.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 600; font-display: swap; src: url("jost-600.woff2") format("woff2"); }
+@font-face { font-family: "La Belle Aurore"; font-style: normal; font-weight: 400; font-display: swap; src: url("labelleaurore-400.woff2") format("woff2"); }

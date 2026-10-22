@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>House of Zariva: build plan</title>
+<link rel="stylesheet" href="docs.css">
+</head>
+<body class="doc">
+<div class="doc-wrap">
+
+  <header class="doc-head">
+    <p class="eyebrow">Build plan</p>
+    <h1 class="display">Intellect does almost all of it. <em>Three pieces</em> are new.</h1>
+    <p class="lead">The store is built on our own Intellect theme with a Zariva theme style. Most of what the prototype shows is an existing Intellect section or setting. The parts marked custom are new code, written once and kept in Zariva’s copy. Shopify’s checkout, payments and apps stay exactly as Shopify runs them.</p>
+    <nav class="doc-toc"><a href="#approach">Approach</a><a href="#pages">Page by page</a><a href="#custom">New code</a><a href="#data">Product data</a><a href="#shopify">Shopify settings</a><a href="#limits">Limits we respect</a><a href="#apps">Apps</a><a href="#sequence">Sequence</a></nav>
+  </header>
+
+  <section class="doc-sec" id="approach">
+    <h2 class="h1">A Zariva copy of Intellect, on a new store.</h2>
+    <dl class="kv">
+      <div><dt>Theme</dt><dd>Intellect with a new “Zariva” style: the colour schemes, fonts and character settings from the Brand sheet. New sections are added to Zariva’s copy, and the useful ones return to Intellect for every store.</dd></div>
+      <div><dt>Store</dt><dd>A new Shopify store in AUD, prices including GST, Australian shipping zones. The theme is built on an unpublished copy and published once approved.</dd></div>
+      <div><dt>Never touched</dt><dd>Checkout content, payment flows, Shopify’s cart and order handling, app behaviour. The theme only uses Shopify’s standard cart properties and attributes.</dd></div>
+    </dl>
+  </section>
+
+  <section class="doc-sec" id="pages">
+    <h2 class="h1">Page by page.</h2>
+    <div class="tbl-scroll"><table class="tbl">
+      <thead><tr><th>Part</th><th>How</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Announcement</td><td>Intellect announcement bar; text from the next Moment</td><td><span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Header and menus</td><td>Intellect header, logo centred, mega menus with a promo card; the Occasions menu lists Moments by date</td><td><span class="tag tag--native">INTELLECT</span> <span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Home: the moment</td><td>Intellect slideshow, one slide filled from the next Moment metaobject; countdown line</td><td><span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Home: what are we celebrating</td><td>Intellect collection index, fed by Moments then always-on occasions</td><td><span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Home: hampers, Build your own tile</td><td>Intellect featured collection; arrival line on each card; grid tile block</td><td><span class="tag tag--native">INTELLECT</span></td></tr>
+        <tr><td>Home: studio story with card writer</td><td>Intellect features section (images) + card preview snippet</td><td><span class="tag tag--native">INTELLECT</span> <span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Unboxed videos, Loupe</td><td>Intellect shoppable videos; Loupe video cards on products with a clip</td><td><span class="tag tag--native">INTELLECT</span></td></tr>
+        <tr><td>Corporate band, footer</td><td>Intellect image-with-text on the plum scheme; Intellect footer</td><td><span class="tag tag--native">INTELLECT</span></td></tr>
+        <tr><td>Collection banner and filters</td><td>Intellect collection banner (text); Search &amp; Discovery filters on recipient, dietary and price metafields</td><td><span class="tag tag--native">INTELLECT</span></td></tr>
+        
+        <tr><td>Product: Make it a gift</td><td>Intellect Gift Mode block, as is: wrap papers as a product, note as line item properties, arrival day and packing slip as cart attributes</td><td><span class="tag tag--native">INTELLECT</span> <span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Product: what’s inside</td><td>Product metaobject list (item, maker, region)</td><td><span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Product: buy bar, reviews, recommendations</td><td>Intellect smart buy bar; reviews app widget; Intellect recommendations</td><td><span class="tag tag--native">INTELLECT</span> <span class="tag tag--app">APP</span></td></tr>
+        <tr><td>Bag drawer and page</td><td>Intellect cart drawer and page with reward ladder and add-ons; gift lines show the card; one-address note</td><td><span class="tag tag--native">INTELLECT</span> <span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Build your own</td><td>Intellect build-a-box: box sizes, item collection, filling box</td><td><span class="tag tag--native">INTELLECT</span> <span class="tag tag--custom">CUSTOM</span></td></tr>
+        <tr><td>Corporate, concierge, studio, help, journal</td><td>Intellect image-with-text, rich text, FAQ, contact form, blog with Shop the story</td><td><span class="tag tag--native">INTELLECT</span></td></tr>
+        <tr><td>Checkout</td><td>Shopify Checkout, branded in the checkout editor</td><td><span class="tag tag--native">INTELLECT</span></td></tr>
+        <tr><td>Account</td><td>Shopify customer accounts</td><td><span class="tag tag--native">INTELLECT</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="doc-sec" id="custom">
+    <h2 class="h1">The three pieces of new code.</h2>
+    <ol class="steps-list">
+      <li><div><b style="font-weight:500">Moments.</b> A “Moment” metaobject (name, date, order-by date, end date for sale weeks, collection, image, headline) and the Liquid that picks the next one. It fills the first slideshow banner, the announcement, the occasion list and the order-by dates.</div></li>
+      <li><div><b style="font-weight:500">Arrival line.</b> “Arrives before Diwali” on cards and the product page, from the hamper’s Moments, today and the cut-off.</div></li>
+      <li><div><b style="font-weight:500">What’s inside.</b> A product metaobject list (item, maker, region) shown in the first collapsible tab.</div></li>
+    </ol>
+  </section>
+
+  <section class="doc-sec" id="data">
+    <h2 class="h1">Product data the store needs.</h2>
+    <div class="tbl-scroll"><table class="tbl">
+      <thead><tr><th>Data</th><th>Where</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td>Moments</td><td>Metaobject <code>moment</code></td><td>name, date, order_by, end_date, collection (reference), image, line, headline, kind (occasion or sale)</td></tr>
+        <tr><td>What’s inside</td><td>Product metafield <code>custom.inside</code></td><td>List of metaobject <code>inside_item</code>: name, maker, region</td></tr>
+        <tr><td>Who it’s for</td><td>Product metafield <code>custom.recipients</code></td><td>List of single line text: her, him, baby, family, team. A Search &amp; Discovery filter.</td></tr>
+        <tr><td>For a girl or a boy</td><td>Product metafield <code>custom.baby_for</code></td><td>List: girl, boy, any. A filter on New baby.</td></tr>
+        <tr><td>Dietary</td><td>Product metafield <code>custom.dietary</code></td><td>List: vegetarian, contains nuts, alcohol-free. A filter.</td></tr>
+        <tr><td>Loupe clips</td><td>Product media, or <code>loupe.clip</code> and its metafields</td><td>See the Intellect guide, Video cards</td></tr>
+        <tr><td>Reviews</td><td>Reviews app fills <code>reviews.rating</code> and <code>reviews.rating_count</code></td><td>Shopify standard</td></tr>
+        <tr><td>Shop the story</td><td>Blog post metafield <code>custom.products</code></td><td>List of products</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="doc-sec" id="shopify">
+    <h2 class="h1">Set up in Shopify, no code.</h2>
+    <dl class="kv">
+      <div><dt>Shipping</dt><dd>Standard ($12, free over $150) and Express ($18) in a shipping profile; Same-day ($25) as local delivery with Sydney and Melbourne metro postcodes.</dd></div>
+      <div><dt>Checkout branding</dt><dd>Logo, plum and square corners in the checkout editor. Express checkout: Shop Pay, PayPal, Google Pay, Apple Pay.</dd></div>
+      <div><dt>Packing slip</dt><dd>Edit the packing slip template so it hides prices when the order has the “Packing slip: No prices” attribute.</dd></div>
+      <div><dt>Volume pricing</dt><dd>Automatic discounts by quantity for corporate tiers (5% from 10, 10% from 50).</dd></div>
+      <div><dt>Free delivery</dt><dd>The $150 threshold in the shipping rate, matching the reward ladder in the theme.</dd></div>
+      <div><dt>Welcome code</dt><dd>WELCOME10, sent by the sign-up email.</dd></div>
+      <div><dt>Customer accounts</dt><dd>Shopify’s new customer accounts, with a one-time code.</dd></div>
+    </dl>
+  </section>
+
+  <section class="doc-sec" id="limits">
+    <h2 class="h1">The limits we build inside.</h2>
+    <p class="lead">From our audit of how themes meet Shopify. Each of these is handled in the design, not worked around.</p>
+    <dl class="kv">
+      <div><dt>One address per order</dt><dd>Shopify ships each order to one address. The bag says so when it holds gifts for two people, and the concierge handles multi-address orders from a list.</dd></div>
+      <div><dt>Checkout content</dt><dd>Only branding changes without Shopify Plus. So the card, the date and the packing-slip choice are all set before checkout, and checkout simply shows them.</dd></div>
+      <div><dt>Line properties and attributes</dt><dd>The card goes on each line as line item properties (To, Message, From); the arrival day and packing-slip choice are cart attributes. Both are standard Shopify, visible on the order, and work with any app.</dd></div>
+      <div><dt>Forms</dt><dd>Shopify’s contact form can’t take files, so logos and address lists come by email after the reply.</dd></div>
+      <div><dt>Delivery dates</dt><dd>The theme works out dates; Shopify doesn’t enforce them. The studio dispatches from the date on the order. A delivery-date app can add courier-level checks later if needed.</dd></div>
+      <div><dt>Apps and subscriptions</dt><dd>Intellect sends the whole product form, keeps hidden properties out of the bag, and accepts app blocks on the product, cart, article and page templates.</dd></div>
+    </dl>
+  </section>
+
+  <section class="doc-sec" id="apps">
+    <h2 class="h1">Two apps, both common.</h2>
+    <dl class="kv">
+      <div><dt>Reviews</dt><dd>Judge.me (free plan) or Okendo. Fills the standard rating fields the theme and Loupe already read.</dd></div>
+      <div><dt>Afterpay</dt><dd>The payment method, and its on-site messaging line on product and bag.</dd></div>
+      <div><dt>Not needed</dt><dd>Bundles (Intellect build-a-box), gift messages (Gift Mode), WhatsApp (a link), video cards (Loupe is in the theme), popups (Intellect).</dd></div>
+    </dl>
+  </section>
+
+  <section class="doc-sec" id="sequence">
+    <h2 class="h1">Sequence.</h2>
+    <ol class="steps-list">
+      <li><div><b style="font-weight:500">Week 1.</b> Store set-up, the Zariva style, Moments metaobject, products and metafields from the client’s catalogue.</div></li>
+      <li><div><b style="font-weight:500">Week 2.</b> Homepage, collections, product page with Gift Mode, bag.</div></li>
+      <li><div><b style="font-weight:500">Week 3.</b> Build your own, corporate, content pages, journal; shipping, checkout branding, packing slip.</div></li>
+      <li><div><b style="font-weight:500">Week 4.</b> Real photography and clips, Loupe, reviews, test orders on every delivery method, launch.</div></li>
+    </ol>
+  </section>
+
+</div>
+</body>
+</html>
