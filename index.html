@@ -1,179 +1,41 @@
 <!doctype html>
-<html lang="en-AU">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>House of Zariva | Hampers for every occasion, delivered across Australia</title>
-<meta name="description" content="Premium gift hampers for Diwali, Christmas, birthdays, baby showers, weddings and corporate gifting. Packed by hand in Sydney with a handwritten card. Same-day delivery in Sydney and Melbourne.">
-<meta name="theme-color" content="#FFFFFF">
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/cormorant-garamond-500.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/jost-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/zariva.css">
-<script>try{if(!sessionStorage.getItem('zariva-unwrapped')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('is-unwrapping')}}catch(e){}</script>
-<script src="assets/js/data.js"></script>
-<script src="assets/js/core.js"></script>
-<script src="assets/js/pages.js"></script>
+<title>House of Zariva prototype</title>
+<link rel="icon" href="site/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="shell/shell.css">
 </head>
-<body data-page="home">
-<script>ZARIVA.top()</script>
+<body>
+<!-- Presentation shell. Client copy does not belong here: it lives in shell/data.js. -->
+<div class="app">
+  <header class="bar">
+    <div class="bar__brand" id="brand"></div>
+    <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  </header>
 
-<main id="main">
+  <div class="tools" id="tools">
+    <div class="seg" id="seg-device" role="group" aria-label="Device"><button type="button" data-device="mobile">Mobile</button><button type="button" data-device="desktop">Desktop</button></div>
+    <div class="seg" id="seg-view" role="group" aria-label="View"><button type="button" data-view="new">New</button><button type="button" data-view="old">Today</button><button type="button" data-view="both">Side by side</button></div>
+    <div class="seg" id="seg-sub" role="group" aria-label="Variant" hidden></div>
+    <div class="seg seg--date" id="seg-date" role="group" aria-label="Pretend today is" hidden></div>
+    <label class="switch"><input type="checkbox" id="sw-notes">Notes</label>
+    <label class="switch"><input type="checkbox" id="sw-build">Build labels</label>
+    <span class="legend" id="legend"></span>
+    <div class="tools__right"><a class="tools__link" id="open-new" href="#" target="_blank" rel="noopener">Open this page on its own</a></div>
+  </div>
 
-  <!-- Section: hero (custom "hero-unwrap" section in the Shopify theme) -->
-  <section class="hero" aria-label="Introduction">
-    <div class="hero__grid">
-      <div class="hero__text">
-        <h1 class="t-display hero__title"><span class="line"><span>For the people</span></span><span class="line"><span>worth the effort.</span></span></h1>
-        <p class="t-lead hero__lead">Hampers packed by hand in our Sydney studio, each with a card we write out for you. Delivered across Australia, and same day in Sydney and Melbourne.</p>
-        <div class="hero__ctas">
-          <a class="btn" href="collection.html?c=all">Shop all hampers</a>
-          <a class="btn btn--secondary" href="#occasions">Shop by occasion</a>
-        </div>
-        <ul class="hero__usps">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19.5 8.5l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>Every card written by hand, in ink</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5h11v9h-11zM13.5 9.5h4l3 3.2v2.8h-7"/><circle cx="6.5" cy="17.5" r="1.7"/><circle cx="17" cy="17.5" r="1.7"/></svg>Same-day in Sydney and Melbourne metro</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19.5C5 11 11 5 19.5 4.5 19.5 13 13.5 19 5 19.5z"/><path d="M5 19.5l8-8"/></svg>From more than 40 Australian makers</li>
-        </ul>
-      </div>
-      <figure class="hero__media">
-        <img src="assets/img/hero-1700.jpg" srcset="assets/img/hero-900.jpg 900w, assets/img/hero-1700.jpg 1700w" sizes="(max-width: 1023px) 100vw, 58vw" alt="A white hamper box tied with olive ribbon, with a pink protea and eucalyptus on a warm yellow backdrop" fetchpriority="high" style="object-position:30% 62%">
-        <div class="wrap__flap wrap__flap--top" aria-hidden="true"></div>
-        <div class="wrap__flap wrap__flap--bottom" aria-hidden="true"></div>
-        <span class="wrap__ribbon wrap__ribbon--h" aria-hidden="true"></span>
-        <span class="wrap__ribbon wrap__ribbon--v" aria-hidden="true"></span>
-        <svg class="wrap__bow" viewBox="0 0 120 70" aria-hidden="true">
-          <path d="M60 35C42 6 9 7 13 29c3 17 30 14 47 6z" fill="currentColor"/>
-          <path d="M60 35c18-29 51-28 47-6-3 17-30 14-47 6z" fill="currentColor"/>
-          <path d="M57 33C45 22 25 17 22 27c-2 7 15 9 35 6z" fill="#B38B4D" opacity=".55"/>
-          <path d="M63 33c12-11 32-16 35-6 2 7-15 9-35 6z" fill="#B38B4D" opacity=".55"/>
-          <path d="M57 38L41 69l10-3 9-26z" fill="currentColor"/>
-          <path d="M63 38l16 31-10-3-9-26z" fill="currentColor"/>
-          <ellipse cx="60" cy="35" rx="9" ry="8" fill="#B38B4D"/>
-        </svg>
-        <span class="wrap__label" aria-hidden="true"><svg viewBox="0 0 24 30" fill="none"><path d="M3.5 29.5V12.2a8.5 8.5 0 0 1 17 0v17.3" stroke="currentColor" stroke-width="1.4"/><path d="M12 14.4l2.5 3-2.5 3-2.5-3z" fill="#B38B4D"/></svg><span>House of</span><b>Zariva</b></span>
-        <a class="hotspot" href="product.html?p=the-protea-box" aria-label="Shop The Protea Box, from $135">
-          <span class="hotspot__dot" aria-hidden="true"></span>
-          <span class="hotspot__card" aria-hidden="true"><b>The Protea Box</b><span>From $135</span></span>
-        </a>
-      </figure>
-    </div>
-  </section>
+  <div class="main" id="main">
+    <div class="stage" id="stage"></div>
+    <aside class="notes" id="notes" aria-label="Notes">
+      <div class="notes__head"><h2 id="notes-title">What it is, and why</h2><p id="notes-sub"></p></div>
+      <ol class="notes__list" id="notes-list"></ol>
+    </aside>
+  </div>
+</div>
 
-  <!-- Section: occasion index (custom "collection-index" section: list of collection links + arch image stage) -->
-  <section class="occasions" id="occasions" aria-labelledby="occ-h">
-    <div class="container occ">
-      <div class="occ__stage" aria-hidden="true"><div class="occ__arch" data-occ-stage></div></div>
-      <div class="occ__body">
-        <div class="occ__head">
-          <p class="eyebrow">Occasions</p>
-          <h2 class="t-h2" id="occ-h">Shop by occasion</h2>
-          <p>Choose the moment and we’ll show you the hampers.</p>
-        </div>
-        <ol class="occ__list" data-occ-list></ol>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section: featured collection (bestsellers) -->
-  <section class="section" aria-labelledby="best-h">
-    <div class="container slider">
-      <div data-best-head></div>
-      <div class="slider__track" data-bestsellers></div>
-      <div class="budget">
-        <span class="budget__label">Shop by budget</span>
-        <a class="chip" href="collection.html?c=all&amp;price=0-100">Under $100</a>
-        <a class="chip" href="collection.html?c=all&amp;price=100-200">$100 to $200</a>
-        <a class="chip" href="collection.html?c=all&amp;price=200-99999">$200 and over</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section: seasonal feature (image with text + product list) -->
-  <section class="section section--mist" aria-labelledby="diwali-h">
-    <div class="container split">
-      <div class="split__media image-reveal">
-        <img src="assets/img/d-hands-diya-900.jpg" srcset="assets/img/d-hands-diya-900.jpg 900w, assets/img/d-hands-diya-1700.jpg 1700w" sizes="(max-width: 1023px) 100vw, 50vw" alt="Hands cupping a lit clay diya" loading="lazy" style="object-position:50% 62%">
-      </div>
-      <div class="split__text">
-        <p class="countdown" data-countdown></p>
-        <h2 class="t-h2" id="diwali-h">Diwali is Sunday 8 November.</h2>
-        <p class="t-lead">Order by Monday 2 November for delivery anywhere in Australia, or by 1pm on Saturday 7 November for same-day in Sydney and Melbourne. Every Diwali hamper leaves us wrapped in marigold.</p>
-        <div class="minis" data-diwali-minis></div>
-        <div><a class="btn" href="collection.html?c=diwali">Shop the Diwali edit</a></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section: UGC reels (custom "shoppable-videos" section: video + product blocks) -->
-  <section class="section" aria-labelledby="ugc-h" data-reel-list>
-    <div class="container slider">
-      <div data-reels-head></div>
-      <div class="slider__track reels__track" data-reels></div>
-    </div>
-  </section>
-
-  <!-- Section: handwritten card demo -->
-  <section class="section section--mist" aria-labelledby="card-h">
-    <div class="container card-demo" data-card-demo>
-      <div class="card-demo__stage">
-        <img src="assets/img/card-writing-900.jpg" srcset="assets/img/card-writing-900.jpg 900w, assets/img/card-writing-1700.jpg 1700w" sizes="(max-width: 1023px) 100vw, 45vw" alt="" loading="lazy">
-        <div class="gift-card" aria-hidden="true"><p class="gift-card__to is-placeholder">Dear Mia,</p><p class="gift-card__msg is-placeholder">Happy birthday! Can’t wait to celebrate with you this weekend.</p><p class="gift-card__from is-placeholder">Love, Sam</p></div>
-      </div>
-      <div class="stack-l">
-        <div class="stack-m">
-          <h2 class="t-h2" id="card-h">You write it. We write it out.</h2>
-          <p class="t-lead">Every hamper comes with a card, handwritten in ink by someone in our studio. Try it: type a message and see how it will arrive.</p>
-        </div>
-        <div class="card-demo__form">
-          <div class="writer__row">
-            <div class="field"><label for="demo-to">To</label><input class="input" id="demo-to" data-card-to maxlength="40" placeholder="Mia"></div>
-            <div class="field"><label for="demo-from">From</label><input class="input" id="demo-from" data-card-from maxlength="40" placeholder="Sam"></div>
-          </div>
-          <div class="field"><label for="demo-msg">Message</label><textarea class="textarea" id="demo-msg" data-card-msg maxlength="250" placeholder="Happy birthday! Can’t wait to celebrate with you this weekend."></textarea><span class="counter" data-card-count>0 / 250</span></div>
-          <p class="t-small t-muted">You’ll write your real message when you choose a hamper. Up to 250 characters, and a blank card is always free.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section: corporate band (image with text) -->
-  <section class="section--plum on-dark" aria-labelledby="corp-h">
-    <div class="band">
-      <div class="band__media">
-        <img src="assets/img/exchange-900.jpg" srcset="assets/img/exchange-900.jpg 900w, assets/img/exchange-1700.jpg 1700w" sizes="(max-width: 1023px) 100vw, 50vw" alt="Two people passing a wrapped white gift box across a table" loading="lazy" style="object-position:50% 40%">
-      </div>
-      <div class="band__text">
-        <h2 class="t-h2" id="corp-h">Gifting for a team or a client list?</h2>
-        <p>From ten hampers to a thousand. We put your logo on the ribbon, deliver to every address on your spreadsheet and send one invoice.</p>
-        <ul class="band__list">
-          <li>A quote within one business day</li>
-          <li>Logo ribbons and printed cards from 20 boxes</li>
-          <li>Bulk pricing from 50 boxes, with Diwali and Christmas lead times planned for you</li>
-        </ul>
-        <div class="band__ctas">
-          <a class="btn btn--light" href="contact.html?topic=corporate">Get a corporate quote</a>
-          <a class="btn btn--ghost-light" href="collection.html?c=corporate-gifting">Browse corporate hampers</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section: reviews (reviews app widget) -->
-  <section class="section" aria-labelledby="rev-h">
-    <div class="container">
-      <div class="section-head">
-        <div class="section-head__text"><h2 class="t-h2" id="rev-h">Kind words</h2><p>From verified orders, published as they come in.</p></div>
-        <div class="rating-summary"><b>4.9</b><div><span data-home-stars></span><p>From <span data-review-total>1,284</span> reviews</p></div></div>
-      </div>
-      <div class="quotes" data-quotes></div>
-      <p style="margin-top:36px"><a class="link" href="reviews.html" style="font-weight:500">Read all reviews</a></p>
-    </div>
-  </section>
-
-</main>
-
-<script>ZARIVA.bottom()</script>
-<script>ZARIVA.boot()</script>
+<script src="shell/data.js"></script>
+<script src="shell/shell.js"></script>
 </body>
 </html>
