@@ -15,6 +15,7 @@
     }
   };
   var today = () => parse(new URLSearchParams(location.search).get("today") || read("zariva:today") || Z.today);
+  var festive = () => new URLSearchParams(location.search).get("festive") ?? read("zariva:festive") ?? "";
   var moments = Z.moments;
   var always = Z.always;
   var recipients = Z.recipients;
@@ -24,6 +25,8 @@
   }
   var upcoming = (t = today()) => moments.filter((m) => !momentState(m, t).past).sort((a, b) => parse(a.date) - parse(b.date));
   function lead(t = today()) {
+    const f = festive() && upcoming(t).find((m) => m.id === festive());
+    if (f) return f;
     for (const m of upcoming(t)) {
       const s = momentState(m, t);
       if (m.kind === "sale") {
@@ -100,7 +103,7 @@
   var inOccasion = (id) => hampers().filter((p) => p.occasions.includes(id));
   var forWho = (id) => hampers().filter((p) => p.for.includes(id));
   var { reviews, reviewStats, ugc, journal, buildItems, boxes, focus, delivery } = Z;
-  var sendingFor = (p) => upcoming().find((m) => m.kind !== "sale" && p.occasions.includes(m.id) && momentState(m).orderable && momentState(m).toDate <= 50) || null;
+  var sendingFor = (p) => upcoming().find((m) => m.kind !== "sale" && p.occasions.includes(m.id) && momentState(m).orderable && (momentState(m).toDate <= 50 || m.id === festive())) || null;
 
   // site/assets/zariva/icons.js
   var ICONS = {
@@ -314,32 +317,71 @@
       <div class="slideshow__arrows"><button type="button" class="slideshow__arrow slideshow__arrow--prev" data-slide-prev aria-label="Previous slide">${icon("arrow")}</button><button type="button" class="slideshow__arrow" data-slide-next aria-label="Next slide">${icon("arrow")}</button></div></div>
     </slide-show></div></section>`);
   }
-  function collectionIndex(rows, caption) {
-    return sec("index", "section-index", `<section class="section index scheme-scheme-1 sp-t-default sp-b-default"><div class="page-width"><p class="caption index__caption" data-reveal>${esc(caption)}</p><index-list class="index__list"><ul class="list-reset" role="list">
-    ${rows.map((r, i) => `<li class="index__row" data-reveal style="--i: ${i}"><a href="${r.href}" class="index__link" data-index-image="${img(r.image)}" data-set-moment="${r.id}"><span class="index__num label">${String(i + 1).padStart(2, "0")}</span><span class="index__title h1">${esc(r.name)}<sup class="count">${r.count}</sup></span><span class="index__note caption">${esc(r.note)}</span><span class="index__arrow">${icon("arrow")}</span><span class="index__thumb media ratio-portrait">${pic(r.image, 900)}</span></a></li>`).join("")}
-  </ul><div class="index__float media ratio-portrait" aria-hidden="true"><img alt="" decoding="async" width="600" height="750"></div></index-list></div></section>`);
-  }
-  function featured(id, { caption, heading, link, linkLabel = "View all", list, scheme = "scheme-1", count }) {
-    return sec(id, "section-featured-collection", `<section class="section featured-collection ${"scheme-" + scheme} sp-t-default sp-b-default"><div class="page-width"><div style="--cols: 4;">
-    <div class="section-head"><div class="section-head__text"><p class="caption" data-reveal>${esc(caption)}</p><h2 class="h2" data-split>${heading}${count ? `<sup class="count">${count}</sup>` : ""}</h2></div>${link ? `<div class="section-head__actions"><a href="${link}" class="btn btn--secondary btn--sm" data-reveal>${btnInner(linkLabel)}</a></div>` : ""}</div>
-    <ul class="grid product-grid list-reset" role="list" style="--cols: 4; --cols-tablet: 3; --cols-mobile: 2;">${list.map((p, i) => `<li>${card(p, i, id)}</li>`).join("")}</ul>
+  function collectionTiles(id, { heading, tiles, cols = 4, ratio = "portrait" }) {
+    return sec(id, "section-collection-list", `<section class="section collection-list collection-list--grid scheme-scheme-1 sp-t-default sp-b-default"><div class="page-width"><div style="--cols: ${cols};">
+    ${heading ? `<div class="section-head"><div class="section-head__text"><h2 class="h3" data-split>${heading}</h2></div></div>` : ""}
+    <ul class="grid list-reset" role="list" style="--cols: ${cols}; --cols-tablet: ${Math.min(cols, 3)}; --cols-mobile: 2;">
+      ${tiles.map((t, i) => `<li><a href="${t.href}" class="tile tile--below" data-reveal style="--i: ${i % 8}"${t.id ? ` data-set-moment="${t.id}"` : ""}><span class="media media--feature hover-zoom ratio-${ratio}" data-reveal-media>${pic(t.image, 900)}</span><span class="tile__text"><span class="tile__title h4">${esc(t.title)}</span>${t.note ? `<span class="caption">${esc(t.note)}</span>` : ""}</span></a></li>`).join("")}
+    </ul>
   </div></div></section>`);
   }
-  function reels(items) {
-    return sec("reels", "section-reels", `<section class="section reels-section reels--carousel scheme-scheme-1 sp-t-default sp-b-default"><div class="page-width"><video-reels data-section-id="reels" data-autoplay="view"><slider-component class="slider" style="--cols: 4;">
-    <div class="section-head"><div class="section-head__text"><p class="caption" data-reveal>Unboxed</p><h2 class="h2" data-split>In their words</h2></div></div>
-    <ul class="reels slider__track list-reset" role="list" style="--cols: 4;" data-slider-track>
-      ${items.map((u, i) => {
-      const p = product(u.product);
-      return `<li class="reel" data-reel data-index="${i}" data-reveal style="--i: ${i}">
-        <button type="button" class="reel__media media" data-reel-open aria-label="Play video from ${esc(u.name)}"><video playsinline muted loop preload="none" class="reel__video" poster="assets/video/${u.video}.jpg"><source src="assets/video/${u.video}.mp4" type="video/mp4"></video><span class="reel__shade" aria-hidden="true"></span><span class="reel__creator caption"><span class="reel__avatar" aria-hidden="true">${esc(u.name[0])}</span>${esc(u.name)}</span><span class="reel__play" aria-hidden="true">${icon("play")}</span></button>
-        <a href="${p.url}" class="reel__product" data-product-root><span class="reel__product-img media ratio-portrait">${pic(p.images[0], 900)}</span><span class="reel__product-text"><span class="reel__product-title">${esc(p.title)}</span>${price(p, p.firstAvailable, { from: true })}</span></a>
-        <template data-reel-sheet><div class="reel-sheet" data-product-root><a href="${p.url}" class="reel-sheet__img media ratio-portrait">${pic(p.images[0], 900)}</a><div class="reel-sheet__info"><a href="${p.url}" class="reel-sheet__title">${esc(p.title)}</a>${price(p, p.firstAvailable, { from: true })}</div><button type="button" class="btn btn--sm" data-quick-view="${p.path}">Choose</button></div></template>
-      </li>`;
-    }).join("")}
+  function budgetRow(id, { heading, links }) {
+    return sec(id, "section-budget", `<section class="section z-budget scheme-scheme-1 sp-t-none sp-b-default"><div class="page-width"><div class="z-budget__row" data-reveal>
+    <h2 class="z-budget__title caption">${esc(heading)}</h2>
+    <ul class="z-budget__links list-reset" role="list">${links.map((l) => `<li><a href="${l.href}" class="z-budget__link"><span class="z-budget__label h4">${esc(l.label)}</span><span class="z-budget__count caption">${l.count} hampers</span>${icon("arrow")}</a></li>`).join("")}</ul>
+  </div></div></section>`);
+  }
+  function testimonials(id, { caption, heading, score, scoreLabel, items }) {
+    return sec(id, "section-testimonials", `<section class="section quotes quotes--wall scheme-scheme-1 sp-t-default sp-b-large"><div class="page-width">
+    <div class="section-head"><div class="section-head__text">${caption ? `<p class="caption" data-reveal>${esc(caption)}</p>` : ""}<h2 class="h2" data-split>${heading}</h2></div>
+      <div class="quotes__score" data-reveal><span class="quotes__score-value">${esc(score)}</span><span class="rating"><span class="rating__stars" style="--rating: 5; --rating-max: 5;"></span></span><span class="caption">${esc(scoreLabel)}</span></div></div>
+    <div class="quotes__wall">${items.map((r, i) => {
+      const p = product(r.product);
+      return `<figure class="quote-card" data-reveal style="--i: ${i}">
+      <span class="rating"><span class="rating__stars" style="--rating: ${r.rating}; --rating-max: 5;"></span></span>
+      <blockquote class="quote-card__text"><p>${esc(r.body)}</p></blockquote>
+      <figcaption class="quote-card__by"><span class="quotes__avatar media"><span>${esc(r.name[0])}</span></span><span><span class="quote-card__author">${esc(r.name)}</span><span class="caption">${esc(r.place)}</span></span></figcaption>
+      ${p ? `<a href="${p.url}" class="quote-card__product"><span class="media ratio-square">${pic(p.images[0], 900)}</span><span class="caption">${esc(p.title)}</span></a>` : ""}
+    </figure>`;
+    }).join("")}</div>
+  </div></section>`);
+  }
+  function press(id, { caption, items }) {
+    return sec(id, "section-press", `<section class="section press scheme-scheme-1 sp-t-small sp-b-default"><div class="page-width"><press-quotes class="press__inner">
+    <p class="caption center" data-reveal>${esc(caption)}</p>
+    <div class="press__quotes" aria-live="polite">${items.map((x, i) => `<blockquote class="press__quote h3${i ? "" : " is-active"}" data-press-quote="${i}">${esc(x.quote)}</blockquote>`).join("")}</div>
+    <ul class="press__logos list-reset" role="list">${items.map((x, i) => `<li><button type="button" class="press__logo${i ? "" : " is-active"}" data-press-logo="${i}" aria-label="${esc(x.name)}"><span class="press__name">${esc(x.name)}</span></button></li>`).join("")}</ul>
+  </press-quotes></div></section>`);
+  }
+  var askUs = () => `<a href="https://wa.me/61255501234?text=${encodeURIComponent("Hi Zariva, I need help choosing a hamper.")}" class="z-ask" target="_blank" rel="noopener" aria-label="Not sure? Ask us on WhatsApp"><span class="z-ask__icon">${icon("whatsapp")}</span><span class="z-ask__label">Not sure? Ask us</span></a>`;
+  function features(id, { items, cols = 4, spacing = "sp-t-small sp-b-small" }) {
+    return sec(id, "section-features", `<section class="section features features--icons scheme-scheme-1 ${spacing}"><div class="page-width">
+    <ul class="features__list list-reset" role="list" style="--cols: ${cols};">
+      ${items.map((f, i) => `<li class="feature" data-reveal style="--i: ${i}"><span class="feature__icon">${icon(f.icon)}</span><div class="feature__body"><h3 class="feature__title h5">${esc(f.title)}</h3><div class="feature__text rte"><p>${esc(f.text)}</p></div></div></li>`).join("")}
     </ul>
-    <div class="slider__foot"><div class="slider__progress" aria-hidden="true"><span data-slider-progress></span></div><div class="slider__nav"><button type="button" class="slider__btn slider__btn--prev" data-slider-prev aria-label="Previous">${icon("arrow")}</button><button type="button" class="slider__btn" data-slider-next aria-label="Next">${icon("arrow")}</button></div></div>
-  </slider-component></video-reels></div></section>`);
+  </div></section>`);
+  }
+  function banner(id, { image, caption, heading, text, label = "View all", link, position = "bottom-left", height = "70svh", overlay = 0.4 }) {
+    return sec(id, "section-hero", `<section class="section hero hero--full hero--light scheme-scheme-1 sp-t-none sp-b-none" style="--hero-h: ${height}; --overlay: ${overlay}; --content-w: 720px; --img-ratio: 1.5; --panels: 1;">
+    <div class="hero__frame"><div class="hero__stage">
+      <div class="hero__media media" data-reveal-media data-parallax>${pic(image, 1700)}</div>
+      <div class="hero__scrim" aria-hidden="true"></div>
+      <div class="hero__content hero__content--${position} page-width"><div class="hero__inner content content--${position.split("-")[1]}">
+        ${caption ? `<p class="caption content__caption" data-reveal style="--i: 0">${esc(caption)}</p>` : ""}
+        <h2 class="h0 content__heading" data-split style="--delay: 80ms">${heading}</h2>
+        ${text ? `<div class="rte content__text" data-reveal style="--i: 2"><p>${esc(text)}</p></div>` : ""}
+        <a href="${link}" class="text-btn content__link" data-reveal style="--i: 3"><span class="link link--underlined">${esc(label)}</span>${icon("arrow")}</a>
+      </div></div>
+    </div></div></section>`);
+  }
+  function featured(id, { caption, heading, link, linkLabel = "View all", list, scheme = "scheme-1", count, carousel = false, spacing = "sp-t-default sp-b-default" }) {
+    const head = heading || caption || link;
+    const items = list.map((p, i) => `<li>${card(p, i, id)}</li>`).join("");
+    return sec(id, "section-featured-collection", `<section class="section featured-collection ${"scheme-" + scheme} ${spacing}"><div class="page-width"><${carousel ? 'slider-component class="slider"' : "div"} style="--cols: 4;">
+    ${head ? `<div class="section-head"><div class="section-head__text">${caption ? `<p class="caption" data-reveal>${esc(caption)}</p>` : ""}${heading ? `<h2 class="h2" data-split>${heading}${count ? `<sup class="count">${count}</sup>` : ""}</h2>` : ""}</div>${link ? `<div class="section-head__actions"><a href="${link}" class="btn btn--secondary btn--sm" data-reveal>${btnInner(linkLabel)}</a></div>` : ""}</div>` : ""}
+    ${carousel ? `<ul class="slider__track list-reset" role="list" style="--cols: 4; --cols-tablet: 3; --cols-mobile: 2;" data-slider-track>${items}</ul>
+      <div class="slider__foot"><div class="slider__progress" aria-hidden="true"><span data-slider-progress></span></div><div class="slider__nav"><button type="button" class="slider__btn slider__btn--prev" data-slider-prev aria-label="Previous">${icon("arrow")}</button><button type="button" class="slider__btn" data-slider-next aria-label="Next">${icon("arrow")}</button></div></div>` : `<ul class="grid product-grid list-reset" role="list" style="--cols: 4; --cols-tablet: 3; --cols-mobile: 2;">${items}</ul>`}
+  </${carousel ? "slider-component" : "div"}></div></section>`);
   }
   function split(id, { image, caption, heading, text, label, link, layout = "image-left", scheme = "scheme-1" }) {
     return sec(id, "section-image-with-text", `<section class="section split scheme-${scheme} sp-t-default sp-b-default"><div class="page-width"><div class="split__grid split--${layout} split--img-medium split--middle">
@@ -796,6 +838,21 @@
         location.reload();
       }
     }
+    if (d.type === "proto:festive") {
+      let cur = "";
+      try {
+        cur = JSON.parse(localStorage.getItem("zariva:festive")) || "";
+      } catch (err) {
+      }
+      if (cur !== (d.moment || "")) {
+        try {
+          localStorage.setItem("zariva:festive", JSON.stringify(d.moment || ""));
+          if (d.moment) sessionStorage.removeItem(`theme:moment-intro:${d.moment}`);
+        } catch (err) {
+        }
+        location.reload();
+      }
+    }
   });
 
   // site/assets/zariva/boot.js
@@ -819,6 +876,12 @@
     }
   })();
   var q = new URLSearchParams(location.search);
+  if (festive()) {
+    document.documentElement.dataset.moment = festive();
+    document.documentElement.dataset.momentLevel = "festive";
+    window.Theme = window.Theme || {};
+    window.Theme.moment = { name: festive(), effect: true };
+  }
   var wrap = (id, cls, html2) => `<div id="shopify-section-${id}" class="shopify-section ${cls}">${html2}</div>`;
   function home() {
     const m = lead();
@@ -830,23 +893,52 @@
     } else {
       slides.push({ image: "exchange", caption: "Hampers, packed by hand in Sydney", heading: "For the people <em>worth the effort</em>", text: "Every hamper wrapped by hand, with a note written in ink.", label: "Find their hamper", link: "collection.html?c=all", overlay: 0.25 });
     }
-    const next = up.find((x) => x !== m && x.kind !== "sale");
-    if (next) slides.push({ image: next.image, caption: `Next \xB7 ${next.name}, ${fmtLong(parse(next.date))}`, heading: next.headline, label: `Shop ${next.name}`, link: `collection.html?c=${next.id}`, overlay: 0.35 });
-    slides.push({ image: "c-journal", caption: "Corporate gifting", heading: "For a team, or <em>a client list</em>", text: "From ten boxes to a thousand, each to its own door.", label: "Corporate gifting", link: "corporate.html", overlay: 0.3 });
-    const rows = [
-      ...up.slice(0, 3).map((x) => {
-        const s = momentState(x);
-        return { id: x.id, name: x.name, image: x.image, href: `collection.html?c=${x.id}`, count: inOccasion(x.id).length, note: x.kind === "sale" ? `${fmtShort(s.start)} \u2013 ${fmtShort(s.end)}` : `${fmtLong(s.start)}${s.orderable ? ` \xB7 order by ${fmtShort(s.orderBy)}` : ""}` };
-      }),
-      ...always.map((x) => ({ id: x.id, name: x.name, image: x.image, href: `collection.html?c=${x.id}`, count: inOccasion(x.id).length, note: "Any day" }))
-    ];
-    const list = (m && m.kind !== "sale" ? inOccasion(m.id) : m ? inOccasion("quiet-week") : hampers().filter((p) => p.best)).slice(0, 4);
+    if (m) slides.push({ image: "exchange", caption: "Hampers, packed by hand in Sydney", heading: "For the people <em>worth the effort</em>", text: "Every hamper wrapped by hand, with a note written in ink.", label: "Find their hamper", link: "collection.html?c=all", overlay: 0.25 });
+    slides.push({ image: "crate", caption: "Build your own", heading: "Their favourite things, <em>in one box</em>", text: "Choose a box, fill it, and we wrap it and write the note.", label: "Build a box", link: "build.html", overlay: 0.3 });
+    const TILE = { "karva-chauth": "d-marigold", diwali: "d-laddoo-diya", "quiet-week": "basket-linen", christmas: "x-cookie-box-pine", valentines: "h-bouquet-box", "mothers-day": "open-woman", "fathers-day": "m-whisky-bottle", birthdays: "hero-open", "new-baby": "b-clothes-basket", "thank-you": "h-candle-light", corporate: "c-choc-gold" };
+    const dated = up.slice(0, 4);
+    const tiles = [...dated, ...always].slice(0, 8).map((x) => {
+      const s = x.date ? momentState(x) : null;
+      return { id: x.id, title: x.name, image: TILE[x.id] || x.image, href: `collection.html?c=${x.id}`, note: !s ? "Any day" : x.kind === "sale" ? `${fmtShort(s.start)} \u2013 ${fmtShort(s.end)}` : fmtShort(s.start) };
+    });
+    const BANNER = { "karva-chauth": "d-row", diwali: "d-rangoli", "quiet-week": "ribbon", christmas: "wrap-hands", valentines: "w-pink-seal", "mothers-day": "h-skincare-wood", "fathers-day": "m-whisky-glasses", birthdays: "h-picnic", "new-baby": "b-newborn", "thank-you": "card-writing", corporate: "c-choc-open" };
+    let soon = up.filter((x) => {
+      const s = momentState(x);
+      return x.kind === "sale" ? s.active || s.toDate <= 10 : s.toDate <= 50;
+    });
+    if (m && m.id === festive()) soon = [m, ...soon.filter((x) => x !== m)];
+    soon = soon.slice(0, 2);
+    const edits = [...soon, ...["birthdays", "corporate", "new-baby", "thank-you"].map(occasion)].slice(0, 4);
+    const edit = (x, i) => {
+      const s = x.date ? momentState(x) : null;
+      const caption = !s ? "Any day" : x.kind === "sale" ? `${fmtLong(s.start)} \u2013 ${fmtLong(s.end)}` : `${fmtLong(s.start)}${s.orderable ? ` \xB7 Order by ${fmtShort(s.orderBy)}` : ""}`;
+      const link = x.id === "corporate" ? "corporate.html" : `collection.html?c=${x.id}`;
+      return banner(`edit-${x.id}`, { image: BANNER[x.id] || x.image, caption, heading: esc(x.name), text: x.line || x.blurb, link, position: i % 2 ? "bottom-right" : "bottom-left" }) + featured(`edit-${x.id}-list`, { list: inOccasion(x.id).slice(0, 6), carousel: true, spacing: "sp-t-small sp-b-default" }) + (x.id === "corporate" ? press("clients", { caption: "Sent for teams at", items: [
+        { name: "Harbourline Legal", quote: "\u201CTwo hundred clients, two hundred addresses, one invoice. Every note was handwritten.\u201D" },
+        { name: "Wattle & Co", quote: "\u201COur team still talks about the Diwali boxes.\u201D" },
+        { name: "Northgate Health", quote: "\u201CBooked on a Tuesday, on every desk by Friday.\u201D" },
+        { name: "Studio Ferrier", quote: "\u201CThe only client gift that got thank-you emails back.\u201D" }
+      ] }) : "");
+    };
+    const hampers2 = hampers();
+    const band = (lo, hi) => hampers2.filter((p) => p.priceMin >= lo * 100 && (!hi || p.priceMin <= hi * 100)).length;
+    const reviews2 = ["the-diya-hamper", "birthday-bloom", "the-boardroom-box"].map((h) => reviews.find((r) => r.product === h)).filter(Boolean);
     return [
       slideshow(slides),
-      collectionIndex(rows, "What are we celebrating"),
-      featured("featured", { caption: m ? m.kind === "sale" ? "The Quiet Week" : `For ${m.name}` : "Most sent", heading: m && m.kind !== "sale" ? `Arrives before <em>${m.name}</em>` : "The ones people send most", link: m ? `collection.html?c=${m.id}` : "collection.html?c=all", list, count: m ? inOccasion(m.kind === "sale" ? "quiet-week" : m.id).length : 0 }),
-      reels(ugc.slice(0, 8)),
-      split("corporate", { image: "exchange", caption: "Gifting for many", heading: "A team, a client list, <em>a whole family</em>", text: "<p>From ten boxes to a thousand. Your logo on the ribbon, each hamper to its own door with its own note, and one invoice.</p>", label: "Corporate gifting", link: "corporate.html" })
+      features("trust", { items: [
+        { icon: "truck", title: "Leaves the same day", text: "Order by 1pm AEST on a weekday. Delivered Australia-wide." },
+        { icon: "gift", title: "Wrapped by hand", text: "In our Sydney studio, with your note written in ink." },
+        { icon: "star", title: `Rated ${reviewStats.average} by ${reviewStats.count.toLocaleString("en-AU")} senders`, text: "Verified reviews from people who sent a hamper." },
+        { icon: "lock", title: "Secure checkout", text: "Shop Pay, Apple Pay, Afterpay and every major card." }
+      ] }),
+      collectionTiles("occasions", { heading: "Shop by occasion", tiles }),
+      budgetRow("budget", { heading: "Shop by budget", links: [
+        { label: "Under $100", href: "collection.html?c=all&filter.v.price.lte=99", count: band(0, 99) },
+        { label: "$100 \u2013 $150", href: "collection.html?c=all&filter.v.price.gte=100&filter.v.price.lte=150", count: band(100, 150) },
+        { label: "$150+", href: "collection.html?c=all&filter.v.price.gte=150", count: band(150) }
+      ] }),
+      ...edits.map(edit),
+      testimonials("reviews", { caption: "Reviews", heading: "In their words", score: String(reviewStats.average), scoreLabel: `from ${reviewStats.count.toLocaleString("en-AU")} reviews`, items: reviews2 })
     ].join("");
   }
   function collection() {
@@ -949,11 +1041,16 @@
       N(".section-header", 1, "native", "Intellect header: logo centred, Occasions mega menu, Who it\u2019s for dropdown"),
       N(".section-slideshow", 2, "native", "Intellect Slideshow: full-width banners, separate phone image; first slide from the next Moment"),
       N(".section-slideshow .slideshow__ui", 3, "", ""),
-      N(".section-index", 4, "native", "Intellect Collection index: Moments by date, then always-on occasions"),
-      N("#shopify-section-featured", 5, "native", "Intellect Featured collection; arrival line is the Moment logic"),
-      N(".section-reels", 6, "native", "Intellect Shoppable videos"),
-      N("#shopify-section-corporate", 7, "native", "Intellect Image with text"),
-      N(".section-footer", 8, "native", "Intellect footer: sign-up, menus, wordmark")
+      N("#shopify-section-trust", 4, "todo", "Intellect Features (icons in a row): trust badges; rating and cut-off time to confirm"),
+      N("#shopify-section-occasions", 5, "native", "Intellect Collection list: grid, title below; dated occasions first, from the Moments"),
+      N("#shopify-section-budget", 6, "custom", "Budget row: links into the collection with Shopify price filters"),
+      N(".section-hero", 7, "native", "Intellect Hero (full width) as an editorial banner, with a View all link"),
+      N(".section-hero + .section-featured-collection", 8, "native", "Intellect Featured collection, carousel, no heading; arrival line is the Moment logic"),
+      N("#shopify-section-clients", 9, "todo", "Intellect Press: client logos and quotes; names are placeholders until Zariva sends logos"),
+      N("#shopify-section-reviews", 10, "app", "Intellect Testimonials; in the live store, reviews from a reviews app (Judge.me or Okendo)"),
+      N(".section-footer", 11, "native", "Intellect footer: sign-up, menus, wordmark"),
+      N(".z-ask", 12, "custom", "Floating WhatsApp concierge link (wa.me), every page except checkout"),
+      N(".header__bar", 13, "", "")
     ],
     collection: [
       N(".section-collection-header", 1, "native", "Intellect Collection banner (text); dates from the Moment"),
@@ -1007,7 +1104,7 @@
   if (page === "checkout") document.body.insertAdjacentHTML("afterbegin", `<main id="MainContent" class="main">${main}</main>${cartDrawer(cartJSON())}`);
   else document.body.insertAdjacentHTML("afterbegin", `${announcement()}${header(page === "home" ? "index.html" : "")}
   <main id="MainContent" class="main" role="main" tabindex="-1">${main}</main>
-  ${footer()}${cartDrawer(cartJSON())}${searchModal()}
+  ${footer()}${askUs()}${cartDrawer(cartJSON())}${searchModal()}
   <div class="toast-region" aria-live="polite"></div>`);
   annotate();
   document.addEventListener("click", (e) => {

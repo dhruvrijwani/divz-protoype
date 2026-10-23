@@ -19,6 +19,14 @@ const page = document.body.dataset.page;
   try { localStorage.setItem('zariva:shopify-cart', JSON.stringify({ lines, note: '', attributes: { Gift: 'Yes', 'Hide prices': 'Yes' } })); } catch (e) {}
 })();
 const q = new URLSearchParams(location.search);
+
+// Seasonal moment, as Intellect's moment snippet sets it up: the presentation's Christmas switch turns it on.
+if (C.festive()) {
+  document.documentElement.dataset.moment = C.festive();
+  document.documentElement.dataset.momentLevel = 'festive';
+  window.Theme = window.Theme || {};
+  window.Theme.moment = { name: C.festive(), effect: true };
+}
 const wrap = (id, cls, html) => `<div id="shopify-section-${id}" class="shopify-section ${cls}">${html}</div>`;
 
 /* ---------- Pages: a list of sections, as a JSON template would be ---------- */
@@ -32,21 +40,55 @@ function home() {
   } else {
     slides.push({ image: 'exchange', caption: 'Hampers, packed by hand in Sydney', heading: 'For the people <em>worth the effort</em>', text: 'Every hamper wrapped by hand, with a note written in ink.', label: 'Find their hamper', link: 'collection.html?c=all', overlay: 0.25 });
   }
-  const next = up.find((x) => x !== m && x.kind !== 'sale');
-  if (next) slides.push({ image: next.image, caption: `Next · ${next.name}, ${C.fmtLong(C.parse(next.date))}`, heading: next.headline, label: `Shop ${next.name}`, link: `collection.html?c=${next.id}`, overlay: 0.35 });
-  slides.push({ image: 'c-journal', caption: 'Corporate gifting', heading: 'For a team, or <em>a client list</em>', text: 'From ten boxes to a thousand, each to its own door.', label: 'Corporate gifting', link: 'corporate.html', overlay: 0.3 });
+  if (m) slides.push({ image: 'exchange', caption: 'Hampers, packed by hand in Sydney', heading: 'For the people <em>worth the effort</em>', text: 'Every hamper wrapped by hand, with a note written in ink.', label: 'Find their hamper', link: 'collection.html?c=all', overlay: 0.25 });
+  slides.push({ image: 'crate', caption: 'Build your own', heading: 'Their favourite things, <em>in one box</em>', text: 'Choose a box, fill it, and we wrap it and write the note.', label: 'Build a box', link: 'build.html', overlay: 0.3 });
 
-  const rows = [
-    ...up.slice(0, 3).map((x) => { const s = C.momentState(x); return { id: x.id, name: x.name, image: x.image, href: `collection.html?c=${x.id}`, count: C.inOccasion(x.id).length, note: x.kind === 'sale' ? `${C.fmtShort(s.start)} – ${C.fmtShort(s.end)}` : `${C.fmtLong(s.start)}${s.orderable ? ` · order by ${C.fmtShort(s.orderBy)}` : ''}` }; }),
-    ...C.always.map((x) => ({ id: x.id, name: x.name, image: x.image, href: `collection.html?c=${x.id}`, count: C.inOccasion(x.id).length, note: 'Any day' })),
-  ];
-  const list = (m && m.kind !== 'sale' ? C.inOccasion(m.id) : m ? C.inOccasion('quiet-week') : C.hampers().filter((p) => p.best)).slice(0, 4);
+  // Shop by occasion: Intellect Collection list. The dated occasions come first, in date order, then the ones for any day.
+  const TILE = { 'karva-chauth': 'd-marigold', diwali: 'd-laddoo-diya', 'quiet-week': 'basket-linen', christmas: 'x-cookie-box-pine', valentines: 'h-bouquet-box', 'mothers-day': 'open-woman', 'fathers-day': 'm-whisky-bottle', birthdays: 'hero-open', 'new-baby': 'b-clothes-basket', 'thank-you': 'h-candle-light', corporate: 'c-choc-gold' };
+  const dated = up.slice(0, 4);
+  const tiles = [...dated, ...C.always].slice(0, 8).map((x) => {
+    const s = x.date ? C.momentState(x) : null;
+    return { id: x.id, title: x.name, image: TILE[x.id] || x.image, href: `collection.html?c=${x.id}`, note: !s ? 'Any day' : x.kind === 'sale' ? `${C.fmtShort(s.start)} – ${C.fmtShort(s.end)}` : C.fmtShort(s.start) };
+  });
+
+  // The edits: one banner per collection, with its hampers underneath. Occasions within 50 days lead, then the ones for any day.
+  const BANNER = { 'karva-chauth': 'd-row', diwali: 'd-rangoli', 'quiet-week': 'ribbon', christmas: 'wrap-hands', valentines: 'w-pink-seal', 'mothers-day': 'h-skincare-wood', 'fathers-day': 'm-whisky-glasses', birthdays: 'h-picnic', 'new-baby': 'b-newborn', 'thank-you': 'card-writing', corporate: 'c-choc-open' };
+  let soon = up.filter((x) => { const s = C.momentState(x); return x.kind === 'sale' ? s.active || s.toDate <= 10 : s.toDate <= 50; });
+  if (m && m.id === C.festive()) soon = [m, ...soon.filter((x) => x !== m)];
+  soon = soon.slice(0, 2);
+  const edits = [...soon, ...['birthdays', 'corporate', 'new-baby', 'thank-you'].map(C.occasion)].slice(0, 4);
+  const edit = (x, i) => {
+    const s = x.date ? C.momentState(x) : null;
+    const caption = !s ? 'Any day' : x.kind === 'sale' ? `${C.fmtLong(s.start)} – ${C.fmtLong(s.end)}` : `${C.fmtLong(s.start)}${s.orderable ? ` · Order by ${C.fmtShort(s.orderBy)}` : ''}`;
+    const link = x.id === 'corporate' ? 'corporate.html' : `collection.html?c=${x.id}`;
+    return R.banner(`edit-${x.id}`, { image: BANNER[x.id] || x.image, caption, heading: R.esc(x.name), text: x.line || x.blurb, link, position: i % 2 ? 'bottom-right' : 'bottom-left' })
+      + R.featured(`edit-${x.id}-list`, { list: C.inOccasion(x.id).slice(0, 6), carousel: true, spacing: 'sp-t-small sp-b-default' })
+      + (x.id === 'corporate' ? R.press('clients', { caption: 'Sent for teams at', items: [
+        { name: 'Harbourline Legal', quote: '“Two hundred clients, two hundred addresses, one invoice. Every note was handwritten.”' },
+        { name: 'Wattle & Co', quote: '“Our team still talks about the Diwali boxes.”' },
+        { name: 'Northgate Health', quote: '“Booked on a Tuesday, on every desk by Friday.”' },
+        { name: 'Studio Ferrier', quote: '“The only client gift that got thank-you emails back.”' },
+      ] }) : '');
+  };
+  const hampers = C.hampers();
+  const band = (lo, hi) => hampers.filter((p) => p.priceMin >= lo * 100 && (!hi || p.priceMin <= hi * 100)).length;
+  const reviews = ['the-diya-hamper', 'birthday-bloom', 'the-boardroom-box'].map((h) => C.reviews.find((r) => r.product === h)).filter(Boolean);
   return [
     R.slideshow(slides),
-    R.collectionIndex(rows, 'What are we celebrating'),
-    R.featured('featured', { caption: m ? (m.kind === 'sale' ? 'The Quiet Week' : `For ${m.name}`) : 'Most sent', heading: m && m.kind !== 'sale' ? `Arrives before <em>${m.name}</em>` : 'The ones people send most', link: m ? `collection.html?c=${m.id}` : 'collection.html?c=all', list, count: m ? C.inOccasion(m.kind === 'sale' ? 'quiet-week' : m.id).length : 0 }),
-    R.reels(C.ugc.slice(0, 8)),
-    R.split('corporate', { image: 'exchange', caption: 'Gifting for many', heading: 'A team, a client list, <em>a whole family</em>', text: '<p>From ten boxes to a thousand. Your logo on the ribbon, each hamper to its own door with its own note, and one invoice.</p>', label: 'Corporate gifting', link: 'corporate.html' }),
+    R.features('trust', { items: [
+      { icon: 'truck', title: 'Leaves the same day', text: 'Order by 1pm AEST on a weekday. Delivered Australia-wide.' },
+      { icon: 'gift', title: 'Wrapped by hand', text: 'In our Sydney studio, with your note written in ink.' },
+      { icon: 'star', title: `Rated ${C.reviewStats.average} by ${C.reviewStats.count.toLocaleString('en-AU')} senders`, text: 'Verified reviews from people who sent a hamper.' },
+      { icon: 'lock', title: 'Secure checkout', text: 'Shop Pay, Apple Pay, Afterpay and every major card.' },
+    ] }),
+    R.collectionTiles('occasions', { heading: 'Shop by occasion', tiles }),
+    R.budgetRow('budget', { heading: 'Shop by budget', links: [
+      { label: 'Under $100', href: 'collection.html?c=all&filter.v.price.lte=99', count: band(0, 99) },
+      { label: '$100 – $150', href: 'collection.html?c=all&filter.v.price.gte=100&filter.v.price.lte=150', count: band(100, 150) },
+      { label: '$150+', href: 'collection.html?c=all&filter.v.price.gte=150', count: band(150) },
+    ] }),
+    ...edits.map(edit),
+    R.testimonials('reviews', { caption: 'Reviews', heading: 'In their words', score: String(C.reviewStats.average), scoreLabel: `from ${C.reviewStats.count.toLocaleString('en-AU')} reviews`, items: reviews }),
   ].join('');
 }
 
@@ -143,11 +185,16 @@ const ANNOTATE = {
     N('.section-header', 1, 'native', 'Intellect header: logo centred, Occasions mega menu, Who it’s for dropdown'),
     N('.section-slideshow', 2, 'native', 'Intellect Slideshow: full-width banners, separate phone image; first slide from the next Moment'),
     N('.section-slideshow .slideshow__ui', 3, '', ''),
-    N('.section-index', 4, 'native', 'Intellect Collection index: Moments by date, then always-on occasions'),
-    N('#shopify-section-featured', 5, 'native', 'Intellect Featured collection; arrival line is the Moment logic'),
-    N('.section-reels', 6, 'native', 'Intellect Shoppable videos'),
-    N('#shopify-section-corporate', 7, 'native', 'Intellect Image with text'),
-    N('.section-footer', 8, 'native', 'Intellect footer: sign-up, menus, wordmark'),
+    N('#shopify-section-trust', 4, 'todo', 'Intellect Features (icons in a row): trust badges; rating and cut-off time to confirm'),
+    N('#shopify-section-occasions', 5, 'native', 'Intellect Collection list: grid, title below; dated occasions first, from the Moments'),
+    N('#shopify-section-budget', 6, 'custom', 'Budget row: links into the collection with Shopify price filters'),
+    N('.section-hero', 7, 'native', 'Intellect Hero (full width) as an editorial banner, with a View all link'),
+    N('.section-hero + .section-featured-collection', 8, 'native', 'Intellect Featured collection, carousel, no heading; arrival line is the Moment logic'),
+    N('#shopify-section-clients', 9, 'todo', 'Intellect Press: client logos and quotes; names are placeholders until Zariva sends logos'),
+    N('#shopify-section-reviews', 10, 'app', 'Intellect Testimonials; in the live store, reviews from a reviews app (Judge.me or Okendo)'),
+    N('.section-footer', 11, 'native', 'Intellect footer: sign-up, menus, wordmark'),
+    N('.z-ask', 12, 'custom', 'Floating WhatsApp concierge link (wa.me), every page except checkout'),
+    N('.header__bar', 13, '', ''),
   ],
   collection: [
     N('.section-collection-header', 1, 'native', 'Intellect Collection banner (text); dates from the Moment'),
@@ -200,7 +247,7 @@ const main = (PAGES[page] || home)();
 if (page === 'checkout') document.body.insertAdjacentHTML('afterbegin', `<main id="MainContent" class="main">${main}</main>${R.cartDrawer(cartJSON())}`);
 else document.body.insertAdjacentHTML('afterbegin', `${R.announcement()}${R.header(page === 'home' ? 'index.html' : '')}
   <main id="MainContent" class="main" role="main" tabindex="-1">${main}</main>
-  ${R.footer()}${R.cartDrawer(cartJSON())}${R.searchModal()}
+  ${R.footer()}${R.askUs()}${R.cartDrawer(cartJSON())}${R.searchModal()}
   <div class="toast-region" aria-live="polite"></div>`);
 annotate();
 

@@ -175,11 +175,84 @@ export function collectionIndex(rows, caption) {
   </ul><div class="index__float media ratio-portrait" aria-hidden="true"><img alt="" decoding="async" width="600" height="750"></div></index-list></div></section>`);
 }
 
-export function featured(id, { caption, heading, link, linkLabel = 'View all', list, scheme = 'scheme-1', count }) {
-  return sec(id, 'section-featured-collection', `<section class="section featured-collection ${'scheme-' + scheme} sp-t-default sp-b-default"><div class="page-width"><div style="--cols: 4;">
-    <div class="section-head"><div class="section-head__text"><p class="caption" data-reveal>${esc(caption)}</p><h2 class="h2" data-split>${heading}${count ? `<sup class="count">${count}</sup>` : ''}</h2></div>${link ? `<div class="section-head__actions"><a href="${link}" class="btn btn--secondary btn--sm" data-reveal>${btnInner(linkLabel)}</a></div>` : ''}</div>
-    <ul class="grid product-grid list-reset" role="list" style="--cols: 4; --cols-tablet: 3; --cols-mobile: 2;">${list.map((p, i) => `<li>${card(p, i, id)}</li>`).join('')}</ul>
+/* Intellect Collection list: tiles with the title below the image (layout grid, tile style below). */
+export function collectionTiles(id, { heading, tiles, cols = 4, ratio = 'portrait' }) {
+  return sec(id, 'section-collection-list', `<section class="section collection-list collection-list--grid scheme-scheme-1 sp-t-default sp-b-default"><div class="page-width"><div style="--cols: ${cols};">
+    ${heading ? `<div class="section-head"><div class="section-head__text"><h2 class="h3" data-split>${heading}</h2></div></div>` : ''}
+    <ul class="grid list-reset" role="list" style="--cols: ${cols}; --cols-tablet: ${Math.min(cols, 3)}; --cols-mobile: 2;">
+      ${tiles.map((t, i) => `<li><a href="${t.href}" class="tile tile--below" data-reveal style="--i: ${i % 8}"${t.id ? ` data-set-moment="${t.id}"` : ''}><span class="media media--feature hover-zoom ratio-${ratio}" data-reveal-media>${pic(t.image, 900)}</span><span class="tile__text"><span class="tile__title h4">${esc(t.title)}</span>${t.note ? `<span class="caption">${esc(t.note)}</span>` : ''}</span></a></li>`).join('')}
+    </ul>
   </div></div></section>`);
+}
+
+/* Shop by budget: one slim row of links into the collection with Shopify's price filter. */
+export function budgetRow(id, { heading, links }) {
+  return sec(id, 'section-budget', `<section class="section z-budget scheme-scheme-1 sp-t-none sp-b-default"><div class="page-width"><div class="z-budget__row" data-reveal>
+    <h2 class="z-budget__title caption">${esc(heading)}</h2>
+    <ul class="z-budget__links list-reset" role="list">${links.map((l) => `<li><a href="${l.href}" class="z-budget__link"><span class="z-budget__label h4">${esc(l.label)}</span><span class="z-budget__count caption">${l.count} hampers</span>${icon('arrow')}</a></li>`).join('')}</ul>
+  </div></div></section>`);
+}
+
+/* Intellect Testimonials, layout Wall: rating, quote, who, and the hamper they sent. */
+export function testimonials(id, { caption, heading, score, scoreLabel, items }) {
+  return sec(id, 'section-testimonials', `<section class="section quotes quotes--wall scheme-scheme-1 sp-t-default sp-b-large"><div class="page-width">
+    <div class="section-head"><div class="section-head__text">${caption ? `<p class="caption" data-reveal>${esc(caption)}</p>` : ''}<h2 class="h2" data-split>${heading}</h2></div>
+      <div class="quotes__score" data-reveal><span class="quotes__score-value">${esc(score)}</span><span class="rating"><span class="rating__stars" style="--rating: 5; --rating-max: 5;"></span></span><span class="caption">${esc(scoreLabel)}</span></div></div>
+    <div class="quotes__wall">${items.map((r, i) => { const p = C.product(r.product); return `<figure class="quote-card" data-reveal style="--i: ${i}">
+      <span class="rating"><span class="rating__stars" style="--rating: ${r.rating}; --rating-max: 5;"></span></span>
+      <blockquote class="quote-card__text"><p>${esc(r.body)}</p></blockquote>
+      <figcaption class="quote-card__by"><span class="quotes__avatar media"><span>${esc(r.name[0])}</span></span><span><span class="quote-card__author">${esc(r.name)}</span><span class="caption">${esc(r.place)}</span></span></figcaption>
+      ${p ? `<a href="${p.url}" class="quote-card__product"><span class="media ratio-square">${pic(p.images[0], 900)}</span><span class="caption">${esc(p.title)}</span></a>` : ''}
+    </figure>`; }).join('')}</div>
+  </div></section>`);
+}
+
+/* Intellect Press: logos (names until the client sends artwork), each with its quote. */
+export function press(id, { caption, items }) {
+  return sec(id, 'section-press', `<section class="section press scheme-scheme-1 sp-t-small sp-b-default"><div class="page-width"><press-quotes class="press__inner">
+    <p class="caption center" data-reveal>${esc(caption)}</p>
+    <div class="press__quotes" aria-live="polite">${items.map((x, i) => `<blockquote class="press__quote h3${i ? '' : ' is-active'}" data-press-quote="${i}">${esc(x.quote)}</blockquote>`).join('')}</div>
+    <ul class="press__logos list-reset" role="list">${items.map((x, i) => `<li><button type="button" class="press__logo${i ? '' : ' is-active'}" data-press-logo="${i}" aria-label="${esc(x.name)}"><span class="press__name">${esc(x.name)}</span></button></li>`).join('')}</ul>
+  </press-quotes></div></section>`);
+}
+
+/* The concierge on WhatsApp, floating on every page. */
+export const askUs = () => `<a href="https://wa.me/61255501234?text=${encodeURIComponent('Hi Zariva, I need help choosing a hamper.')}" class="z-ask" target="_blank" rel="noopener" aria-label="Not sure? Ask us on WhatsApp"><span class="z-ask__icon">${icon('whatsapp')}</span><span class="z-ask__label">Not sure? Ask us</span></a>`;
+
+/* Intellect Features, layout Icons in a row: the trust badges. */
+export function features(id, { items, cols = 4, spacing = 'sp-t-small sp-b-small' }) {
+  return sec(id, 'section-features', `<section class="section features features--icons scheme-scheme-1 ${spacing}"><div class="page-width">
+    <ul class="features__list list-reset" role="list" style="--cols: ${cols};">
+      ${items.map((f, i) => `<li class="feature" data-reveal style="--i: ${i}"><span class="feature__icon">${icon(f.icon)}</span><div class="feature__body"><h3 class="feature__title h5">${esc(f.title)}</h3><div class="feature__text rte"><p>${esc(f.text)}</p></div></div></li>`).join('')}
+    </ul>
+  </div></section>`);
+}
+
+/* Intellect Hero, style Full width, used mid-page as an editorial banner: caption, heading, text and a link block. */
+export function banner(id, { image, caption, heading, text, label = 'View all', link, position = 'bottom-left', height = '70svh', overlay = 0.4 }) {
+  return sec(id, 'section-hero', `<section class="section hero hero--full hero--light scheme-scheme-1 sp-t-none sp-b-none" style="--hero-h: ${height}; --overlay: ${overlay}; --content-w: 720px; --img-ratio: 1.5; --panels: 1;">
+    <div class="hero__frame"><div class="hero__stage">
+      <div class="hero__media media" data-reveal-media data-parallax>${pic(image, 1700)}</div>
+      <div class="hero__scrim" aria-hidden="true"></div>
+      <div class="hero__content hero__content--${position} page-width"><div class="hero__inner content content--${position.split('-')[1]}">
+        ${caption ? `<p class="caption content__caption" data-reveal style="--i: 0">${esc(caption)}</p>` : ''}
+        <h2 class="h0 content__heading" data-split style="--delay: 80ms">${heading}</h2>
+        ${text ? `<div class="rte content__text" data-reveal style="--i: 2"><p>${esc(text)}</p></div>` : ''}
+        <a href="${link}" class="text-btn content__link" data-reveal style="--i: 3"><span class="link link--underlined">${esc(label)}</span>${icon('arrow')}</a>
+      </div></div>
+    </div></div></section>`);
+}
+
+export function featured(id, { caption, heading, link, linkLabel = 'View all', list, scheme = 'scheme-1', count, carousel = false, spacing = 'sp-t-default sp-b-default' }) {
+  const head = heading || caption || link;
+  const items = list.map((p, i) => `<li>${card(p, i, id)}</li>`).join('');
+  return sec(id, 'section-featured-collection', `<section class="section featured-collection ${'scheme-' + scheme} ${spacing}"><div class="page-width"><${carousel ? 'slider-component class="slider"' : 'div'} style="--cols: 4;">
+    ${head ? `<div class="section-head"><div class="section-head__text">${caption ? `<p class="caption" data-reveal>${esc(caption)}</p>` : ''}${heading ? `<h2 class="h2" data-split>${heading}${count ? `<sup class="count">${count}</sup>` : ''}</h2>` : ''}</div>${link ? `<div class="section-head__actions"><a href="${link}" class="btn btn--secondary btn--sm" data-reveal>${btnInner(linkLabel)}</a></div>` : ''}</div>` : ''}
+    ${carousel
+    ? `<ul class="slider__track list-reset" role="list" style="--cols: 4; --cols-tablet: 3; --cols-mobile: 2;" data-slider-track>${items}</ul>
+      <div class="slider__foot"><div class="slider__progress" aria-hidden="true"><span data-slider-progress></span></div><div class="slider__nav"><button type="button" class="slider__btn slider__btn--prev" data-slider-prev aria-label="Previous">${icon('arrow')}</button><button type="button" class="slider__btn" data-slider-next aria-label="Next">${icon('arrow')}</button></div></div>`
+    : `<ul class="grid product-grid list-reset" role="list" style="--cols: 4; --cols-tablet: 3; --cols-mobile: 2;">${items}</ul>`}
+  </${carousel ? 'slider-component' : 'div'}></div></section>`);
 }
 
 export function reels(items) {

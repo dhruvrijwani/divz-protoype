@@ -12,17 +12,18 @@
   var FIRST = (DOCS[0] || PAGES[0]).id;
 
   var DATES = S.dates || [];
-  var state = { tab: FIRST, device: 'mobile', view: 'new', notes: true, build: false, sub: 0, date: DATES.length ? DATES[0].v : '' };
+  var FESTIVE = S.festive || null; // { moment: 'christmas', label: 'Christmas' }: a switch that turns the seasonal moment on
+  var state = { tab: FIRST, device: 'mobile', view: 'new', notes: true, build: false, sub: 0, date: DATES.length ? DATES[0].v : '', festive: false };
   (function readHash() {
     location.hash.replace(/^#/, '').split('&').forEach(function (kv) {
       var p = kv.split('='); if (!(p[0] in state)) return;
-      state[p[0]] = (p[0] === 'notes' || p[0] === 'build') ? p[1] === '1' : (p[0] === 'sub' ? +p[1] || 0 : p[1]);
+      state[p[0]] = (p[0] === 'notes' || p[0] === 'build' || p[0] === 'festive') ? p[1] === '1' : (p[0] === 'sub' ? +p[1] || 0 : p[1]);
     });
     if (!find(state.tab)) state.tab = FIRST;
     if (S.compare === false) state.view = 'new';
   })();
   function writeHash() {
-    try { history.replaceState(null, '', '#tab=' + state.tab + '&device=' + state.device + '&view=' + state.view + '&notes=' + (state.notes ? 1 : 0) + '&build=' + (state.build ? 1 : 0) + (state.sub ? '&sub=' + state.sub : '') + (state.date ? '&date=' + state.date : '')); } catch (e) {}
+    try { history.replaceState(null, '', '#tab=' + state.tab + '&device=' + state.device + '&view=' + state.view + '&notes=' + (state.notes ? 1 : 0) + '&build=' + (state.build ? 1 : 0) + (state.sub ? '&sub=' + state.sub : '') + (state.date ? '&date=' + state.date : '') + (state.festive ? '&festive=1' : '')); } catch (e) {}
   }
   function find(id) { return PAGES.concat(DOCS).filter(function (x) { return x.id === id; })[0]; }
   function isDoc(id) { return DOCS.some(function (d) { return d.id === id; }); }
@@ -154,13 +155,14 @@
     sub.hidden = !p.views;
     if (p.views) sub.innerHTML = p.views.map(function (v, i) { return '<button type="button" data-sub="' + i + '"' + (i === state.sub ? ' class="is-on"' : '') + '>' + v.label + '</button>'; }).join('');
     $('sw-notes').checked = state.notes; $('sw-build').checked = state.build;
+    if (FESTIVE) { $('festive-switch').hidden = false; $('festive-label').textContent = FESTIVE.label; $('sw-festive').checked = state.festive; }
     $('legend').classList.toggle('is-on', state.build);
     $('open-new').href = newSrc(p) + (state.build ? '#build' : '');
   }
 
   /* ---------- bridge to the pages (site/assets/proto.js) ---------- */
   function newFrame() { var v = stage.querySelector('[data-view="new"] iframe'); return v && v.contentWindow; }
-  function sendState() { var w = newFrame(); if (w) { w.postMessage({ type: 'proto:state', build: state.build, notes: state.notes, labels: LABELS }, '*'); if (state.date) w.postMessage({ type: 'proto:date', date: state.date }, '*'); } }
+  function sendState() { var w = newFrame(); if (w) { w.postMessage({ type: 'proto:state', build: state.build, notes: state.notes, labels: LABELS }, '*'); if (state.date) w.postMessage({ type: 'proto:date', date: state.date }, '*'); if (FESTIVE) w.postMessage({ type: 'proto:festive', moment: state.festive ? FESTIVE.moment : '' }, '*'); } }
   window.addEventListener('message', function (e) {
     var d = e.data || {};
     if (d.type === 'proto:ready') {
@@ -176,7 +178,7 @@
 
   function go(patch) {
     var rebuild = false, k;
-    for (k in patch) { if (state[k] !== patch[k]) { state[k] = patch[k]; if (k !== 'notes' && k !== 'build') rebuild = true; } }
+    for (k in patch) { if (state[k] !== patch[k]) { state[k] = patch[k]; if (k !== 'notes' && k !== 'build' && k !== 'festive') rebuild = true; } }
     if (patch.tab !== undefined) state.sub = patch.sub || 0;
     writeHash(); renderTabs(); renderTools(); renderNotes();
     if (rebuild) renderStage(); else { layout(); sendState(); }
@@ -200,6 +202,7 @@
   });
   $('sw-notes').addEventListener('change', function (e) { go({ notes: e.target.checked }); });
   $('sw-build').addEventListener('change', function (e) { go({ build: e.target.checked }); });
+  $('sw-festive').addEventListener('change', function (e) { go({ festive: e.target.checked }); });
   document.addEventListener('keydown', function (e) {
     if (/input|textarea|select/i.test(e.target.tagName)) return;
     var all = order(), i = all.map(function (x) { return x.id; }).indexOf(state.tab);

@@ -15,6 +15,9 @@ window.SHELL = {
     { v: '2027-04-20', label: '20 Apr', hint: 'Mother’s Day leads' },
   ],
 
+  // The Christmas switch: Intellect's Christmas moment (snow, Santa's sleigh, lights, holly), and Christmas leads the store.
+  festive: { moment: 'christmas', label: 'Christmas' },
+
   kinds: { brand: 'Brand', gift: 'Gift', sales: 'Sales', trust: 'Trust', shopify: 'Shopify' },
   labels: {
     native: { tag: 'INTELLECT', means: 'our theme, as is', color: '#17683f' },
@@ -34,13 +37,18 @@ window.SHELL = {
       id: 'home', label: 'Home', src: 'site/index.html',
       notes: [
         { n: 1, k: 'brand', t: 'Intellect’s header, in Zariva’s clothes', now: 'Logo centred, Occasions as a mega menu with the next occasion’s photograph, Who it’s for as a dropdown. Transparent over the banner, solid once you scroll.', why: 'Four ways in cover how people shop for gifts: by the day, by the person, by making it, or in bulk.' },
-        { n: 2, k: 'gift', t: 'Full-width banners that follow the calendar', now: 'Intellect’s slideshow: the next occasion first, then the one after, then corporate. Each banner can have its own phone image. Try the date switch above.', why: 'Nobody rebuilds the homepage for each festival. The client adds an occasion once, with its date, and the banners update themselves.' },
+        { n: 2, k: 'gift', t: 'One banner, led by the calendar', now: 'Intellect’s slideshow: the next occasion first, then the brand and Build your own. Each banner can have its own phone image. Try the date switch above.', why: 'Nobody rebuilds the homepage for each festival. The client adds an occasion once, with its date, and the banner updates itself.' },
         { n: 3, k: 'brand', t: 'Quiet controls', now: 'Thin progress lines and arrows. Banners pause on hover and when off screen.', why: 'Movement without noise.' },
-        { n: 4, k: 'gift', t: 'What are we celebrating?', now: 'Intellect’s collection index: the next three occasions by date with their order-by dates, then the ones for any day. The photograph follows the cursor.', why: 'Occasion is how this business is organised. One clean list, no tiles.' },
-        { n: 5, k: 'gift', t: 'Every hamper says when it arrives', now: '“Arrives before Diwali” under each card, worked out from the date and the cut-off.', why: 'A gift’s one job is to arrive on time. Saying it answers the question before it’s asked.' },
-        { n: 6, k: 'trust', t: 'Unboxed, in their words', now: 'Intellect’s shoppable videos, with the hamper under each. Hampers with a clip also carry Loupe on their card: try The Diya Hamper on 1 Nov.', why: 'Social proof that sells directly.' },
-        { n: 7, k: 'sales', t: 'Gifting for many', now: 'One image-with-text block for corporate, the largest orders.', why: 'Visible, without crowding the page.' },
-        { n: 8, k: 'trust', t: 'A footer that keeps the calendar', now: 'A note before each occasion, by email. Then occasions, help and the studio.', why: 'A reminder before each festival brings people back at exactly the moment they buy.' },
+        { n: 4, k: 'trust', t: 'Trust badges', now: 'Intellect’s features section, icons in a row, under the banner: same-day dispatch, wrapped by hand, the rating, secure checkout. The rating and the 1pm cut-off are samples to confirm.', why: 'A first-time sender is trusting a stranger with a gift that has to arrive. Four answers before they ask.' },
+        { n: 5, k: 'gift', t: 'Shop by occasion', now: 'Intellect’s collection list: a photograph and a name for each occasion. Dated occasions come first, in date order, with their day; then the ones for any day.', why: 'Occasion is how this business is organised. Eight doors, nothing else.' },
+        { n: 6, k: 'sales', t: 'Shop by budget', now: 'One slim row under the occasions: Under $100, $100 – $150, $150+, each with its count. Each link opens all hampers with Shopify’s price filter already set.', why: 'After the occasion, budget is how most gift shoppers decide. Three bands that split the range into even thirds.' },
+        { n: 7, k: 'brand', t: 'The edits: a banner, then its hampers', now: 'Intellect’s full-width banner for each collection, with a View all link: the occasions within the next 50 days, then Birthdays, Corporate and New baby. Four edits in all.', why: 'An editorial page, like a magazine: one photograph introduces each collection, and the hampers follow straight underneath.' },
+        { n: 8, k: 'gift', t: 'Every hamper says when it arrives', now: 'Intellect’s featured collection as a carousel, no heading. “Arrives before Diwali” under each card, worked out from the date and the cut-off.', why: 'A gift’s one job is to arrive on time. Saying it answers the question before it’s asked.' },
+        { n: 9, k: 'trust', t: 'Sent for teams at', now: 'Intellect’s press section after the corporate edit: client logos, each with one line from that client. The names are placeholders until Zariva sends real logos and permission to use them.', why: 'Corporate buyers buy what other companies already trust.' },
+        { n: 10, k: 'trust', t: 'In their words', now: 'Intellect’s testimonials: the rating, and three reviews, each with the hamper that was sent. In the live store the reviews come from a reviews app (Judge.me or Okendo).', why: 'A stranger’s story about the same gift, sent to the same kind of person, is the strongest reason to buy it.' },
+        { n: 11, k: 'trust', t: 'A footer that keeps the calendar', now: 'A note before each occasion, by email. Then occasions, help and the studio.', why: 'A reminder before each festival brings people back at exactly the moment they buy.' },
+        { n: 12, k: 'sales', t: 'Not sure? Ask us', now: 'A WhatsApp button on every page (green circle on phones), opening a chat with the studio with the first line written. Hidden on Build your own, where the box panel sits.', why: 'Gift buyers often get stuck on who it’s for. A person answering in minutes closes the sale.' },
+        { n: 13, k: 'brand', t: 'The Christmas switch', now: 'Intellect’s Christmas moment: snowfall, Santa’s sleigh on arrival and after every Add to bag, string lights under the header, holly on the cards, frosted buttons, and Christmas leads the banner, the announcement and the first edit. In the live store it switches itself on and off by date.', why: 'The store dresses for the season without a redesign, then undresses on 26 December.' },
       ],
     },
     {

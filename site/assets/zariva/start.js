@@ -9,6 +9,7 @@ import '../intellect/slider.js';
 import '../intellect/collection.js';
 import '../intellect/product.js';
 import '../intellect/bundle.js';
+import '../intellect/moments.js';
 import { Cart, openCart } from '../intellect/cart.js';
 
 window.ZarivaIntellect = { Cart, openCart };

@@ -12,6 +12,8 @@ export const fmtShort = (d) => `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3
 export const days = (a, b) => Math.round((b - a) / 864e5);
 const read = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
 export const today = () => parse(new URLSearchParams(location.search).get('today') || read('zariva:today') || Z.today);
+// The presentation's Christmas switch (or ?festive=christmas): the seasonal moment is on, and its occasion leads.
+export const festive = () => new URLSearchParams(location.search).get('festive') ?? read('zariva:festive') ?? '';
 
 /* ---------- Moments: the occasion the site leads with ---------- */
 export const moments = Z.moments;
@@ -23,6 +25,8 @@ export function momentState(m, t = today()) {
 }
 export const upcoming = (t = today()) => moments.filter((m) => !momentState(m, t).past).sort((a, b) => parse(a.date) - parse(b.date));
 export function lead(t = today()) {
+  const f = festive() && upcoming(t).find((m) => m.id === festive());
+  if (f) return f;
   for (const m of upcoming(t)) {
     const s = momentState(m, t);
     if (m.kind === 'sale') { if (s.active || s.toDate <= 10) return m; continue; }
@@ -72,5 +76,5 @@ export const hampers = () => products.filter((p) => p.type === 'hamper');
 export const inOccasion = (id) => hampers().filter((p) => p.occasions.includes(id));
 export const forWho = (id) => hampers().filter((p) => p.for.includes(id));
 export const { reviews, reviewStats, ugc, journal, buildItems, boxes, focus, delivery } = Z;
-export const sendingFor = (p) => upcoming().find((m) => m.kind !== 'sale' && p.occasions.includes(m.id) && momentState(m).orderable && momentState(m).toDate <= 50) || null;
+export const sendingFor = (p) => upcoming().find((m) => m.kind !== 'sale' && p.occasions.includes(m.id) && momentState(m).orderable && (momentState(m).toDate <= 50 || m.id === festive())) || null;
 export const greeting = (m) => ({ 'karva-chauth': 'Happy Karva Chauth', diwali: 'Happy Diwali', christmas: 'Merry Christmas', valentines: 'Happy Valentine’s Day', 'mothers-day': 'Happy Mother’s Day', 'fathers-day': 'Happy Father’s Day' })[m?.id] || '';

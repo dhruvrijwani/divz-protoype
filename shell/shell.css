@@ -122,6 +122,8 @@ a { color: inherit; }
 
 /* Zariva: the date switch. Pick a day and the whole site reshapes around the next occasion. */
 .seg--date { align-items: center; }
+.switch[hidden] { display: none; }
+.switch--festive input:checked + span { color: #ff8a80; }
 .seg--date::before { content: "Today is"; padding: 0 10px 0 12px; font-size: 12px; color: var(--on-dark-3); border-right: 1px solid var(--line-dark); height: 32px; display: inline-flex; align-items: center; }
 .seg--date { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
 .seg--date::-webkit-scrollbar { display: none; }

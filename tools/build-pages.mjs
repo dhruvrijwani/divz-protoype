@@ -18,7 +18,7 @@ const PAGES = [
   ['account.html', 'account', 'Account | House of Zariva', {}],
   ['checkout.html', 'checkout', 'Checkout | House of Zariva', {}],
 ];
-const CSS = ['intellect/theme-vars', 'intellect/base', 'intellect/content', 'intellect/sections', 'intellect/slideshow', 'intellect/product', 'intellect/collection', 'intellect/cart', 'intellect/pages', 'intellect/bundle', 'intellect/loupe', 'zariva/zariva'];
+const CSS = ['intellect/theme-vars', 'intellect/base', 'intellect/content', 'intellect/sections', 'intellect/slideshow', 'intellect/product', 'intellect/collection', 'intellect/cart', 'intellect/pages', 'intellect/bundle', 'intellect/loupe', 'intellect/moments', 'zariva/zariva'];
 const IMPORTS = { '@theme/core': 'core', '@theme/motion': 'motion', '@theme/cart': 'cart', '@theme/product': 'product', '@theme/collection': 'collection', '@theme/slider': 'slider', '@theme/lenis': 'vendor-lenis', '@theme/cursor': 'cursor' };
 
 for (const old of fs.readdirSync('site').filter((f) => f.endsWith('.html'))) fs.rmSync(`site/${old}`);

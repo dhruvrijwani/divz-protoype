@@ -11,7 +11,7 @@ fs.mkdirSync(OUT, { recursive: true });
 const files = [
   'base.css', 'content.css', 'sections.css', 'product.css', 'collection.css', 'cart.css', 'slideshow.css', 'pages.css', 'bundle.css',
   'core.js', 'motion.js', 'theme.js', 'cart.js', 'product.js', 'collection.js', 'slider.js', 'sections.js', 'reels.js', 'slideshow.js', 'bundle.js', 'cursor.js', 'vendor-lenis.js',
-  'loupe.js', 'loupe.css', 'loupe-loader.js', 'archivo-latin.woff2', 'archivo-latin-italic.woff2',
+  'moments.js', 'moments.css', 'loupe.js', 'loupe.css', 'loupe-loader.js', 'archivo-latin.woff2', 'archivo-latin-italic.woff2',
 ];
 for (const f of files) fs.copyFileSync(path.join(THEME, 'assets', f), path.join(OUT, f));
 

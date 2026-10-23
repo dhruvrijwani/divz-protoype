@@ -171,4 +171,15 @@ addEventListener('message', (e) => {
     try { cur = JSON.parse(localStorage.getItem('zariva:today')); } catch (err) {}
     if (cur !== d.date) { try { localStorage.setItem('zariva:today', JSON.stringify(d.date)); } catch (err) {} location.reload(); }
   }
+  if (d.type === 'proto:festive') {
+    let cur = '';
+    try { cur = JSON.parse(localStorage.getItem('zariva:festive')) || ''; } catch (err) {}
+    if (cur !== (d.moment || '')) {
+      try {
+        localStorage.setItem('zariva:festive', JSON.stringify(d.moment || ''));
+        if (d.moment) sessionStorage.removeItem(`theme:moment-intro:${d.moment}`); // Santa flies in again when it is switched on
+      } catch (err) {}
+      location.reload();
+    }
+  }
 });
